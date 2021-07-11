@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/Tera_ulang"
+            android:title="@string/tera_ulang_data"
+            android:icon="@drawable/pensil_vector"/>
+        <item
+            android:id="@+id/Data_Tera"
+            android:title="@string/data_tera_ulang"
+            android:icon="@drawable/balance_icon"/>
+        <item
+            android:id="@+id/monitoring_tera"
+            android:title="@string/monitoring_tera"
+            android:icon="@drawable/monitoring_icon"/>
+        <item
+            android:id="@+id/keluar"
+            android:title="@string/keluar"
+            android:icon="@drawable/ic_main_menu"/>
+    </group>
+
+</menu>

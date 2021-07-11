@@ -1,0 +1,74 @@
+package pemda.cirebon.teraulang;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.FrameLayout;
+
+import com.google.android.material.tabs.TabLayout;
+
+import pemda.cirebon.teraulang.Adapter.TabFragment;
+import pemda.cirebon.teraulang.Fragment.Data_Fragment;
+import pemda.cirebon.teraulang.Fragment.Grafik_Fragment;
+
+public class ReportTera extends AppCompatActivity {
+
+    TabLayout tabs;
+    View viewIndicator;
+    ViewPager viewPager;
+
+    private int indicatorWidth;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_report_tera);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        tabs = findViewById(R.id.tab);
+        viewIndicator = findViewById(R.id.indicator);
+        viewPager = findViewById(R.id.ViewPager);
+
+        TabFragment adapter = new TabFragment(getSupportFragmentManager());
+        adapter.addFragment(Data_Fragment.newInstance(), "Data Tera");
+        adapter.addFragment(Grafik_Fragment.newInstance(), "Grafik Tera");
+        viewPager.setAdapter(adapter);
+        tabs.setupWithViewPager(viewPager);
+
+        tabs.post(() -> {
+            indicatorWidth = tabs.getWidth() / tabs.getTabCount();
+
+            FrameLayout.LayoutParams indicatorParams = (FrameLayout.LayoutParams) viewIndicator.getLayoutParams();
+            indicatorParams.width = indicatorWidth;
+            viewIndicator.setLayoutParams(indicatorParams);
+        });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) viewIndicator.getLayoutParams();
+
+                float translationOffSet = (positionOffset+position) * indicatorWidth;
+                params.leftMargin = (int) translationOffSet;
+                viewIndicator.setLayoutParams(params);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+    }
+
+}

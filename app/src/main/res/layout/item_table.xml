@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:stretchColumns="1,2,3,4,5,6,7,8,9">
+
+    <TableRow tools:ignore="UselessParent"
+        android:background="@drawable/border_right_bottom">
+
+        <TextView
+            android:layout_width="137dp"
+            android:id="@+id/TglTeraAwal_tv"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:layout_column="1"/>
+        <TextView
+            android:layout_width="105dp"
+            android:id="@+id/Nama_tv"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:layout_column="2"/>
+        <TextView
+            android:layout_width="105dp"
+            android:id="@+id/noHp_tv"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:layout_column="3"/>
+        <TextView
+            android:layout_width="105dp"
+            android:id="@+id/alamat_tv"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:layout_column="4"/>
+        <TextView
+            android:layout_width="105dp"
+            android:id="@+id/kecamatan_tv"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:layout_column="5"/>
+        <TextView
+            android:layout_width="105dp"
+            android:id="@+id/kelurahan_tv"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:layout_column="6"/>
+        <TextView
+            android:layout_width="105dp"
+            android:id="@+id/timbangan_tv"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:layout_column="7"/>
+        <TextView
+            android:layout_width="105dp"
+            android:id="@+id/kapasitas_tv"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:layout_column="8"/>
+        <TextView
+            android:layout_width="105dp"
+            android:id="@+id/retribusi_tv"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:layout_column="9"/>
+    </TableRow>
+</TableLayout>

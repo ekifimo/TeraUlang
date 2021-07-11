@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00FF0000"
+    tools:context=".Fragment.Data_Fragment">
+
+    <Spinner
+        android:id="@+id/PilihTahun"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/spinner_style"
+        android:entries="@array/PilihTahun"
+        app:layout_constraintBottom_toTopOf="@+id/tableMode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/judul"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/judul"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:text="@string/export_data"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/tableMode"
+        app:layout_constraintEnd_toStartOf="@+id/PilihTahun"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <HorizontalScrollView
+        android:id="@+id/tableMode"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/judul">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1,2,3,4,5,6,7,8,9">
+
+            <TableRow android:background="#CD9B01">
+
+                <TextView
+                    android:id="@+id/TglTeraAwal_tv"
+                    android:layout_width="137dp"
+                    android:layout_column="1"
+                    android:background="@drawable/border_right_bottom"
+                    android:gravity="center"
+                    android:text="@string/tanggal_tera_ulang"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/Nama_tv"
+                    android:layout_width="105dp"
+                    android:layout_column="2"
+                    android:background="@drawable/border_right_bottom"
+                    android:gravity="center"
+                    android:text="@string/nama"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/noHp_tv"
+                    android:layout_width="105dp"
+                    android:layout_column="3"
+                    android:background="@drawable/border_right_bottom"
+                    android:gravity="center"
+                    android:text="@string/no_hp"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/alamat_tv"
+                    android:layout_width="105dp"
+                    android:layout_column="4"
+                    android:background="@drawable/border_right_bottom"
+                    android:gravity="center"
+                    android:text="@string/alamat"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/kecamatan_tv"
+                    android:layout_width="105dp"
+                    android:layout_column="5"
+                    android:background="@drawable/border_right_bottom"
+                    android:gravity="center"
+                    android:text="@string/kelurahan"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/kelurahan_tv"
+                    android:layout_width="105dp"
+                    android:layout_column="6"
+                    android:background="@drawable/border_right_bottom"
+                    android:gravity="center"
+                    android:text="@string/kecamatan"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/timbangan_tv"
+                    android:layout_width="105dp"
+                    android:layout_column="7"
+                    android:background="@drawable/border_right_bottom"
+                    android:gravity="center"
+                    android:text="@string/timbangan"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/kapasitas_tv"
+                    android:layout_width="105dp"
+                    android:layout_column="8"
+                    android:background="@drawable/border_right_bottom"
+                    android:gravity="center"
+                    android:text="@string/kapasitas"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/retribusi_tv"
+                    android:layout_width="105dp"
+                    android:layout_column="9"
+                    android:background="@drawable/border_right_bottom"
+                    android:gravity="center"
+                    android:text="@string/retribusi"
+                    android:textColor="@color/white" />
+            </TableRow>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/RcTable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </TableLayout>
+    </HorizontalScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
