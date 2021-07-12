@@ -41,9 +41,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'com.firebaseui:firebase-ui-database:7.2.0'
     implementation 'com.google.firebase:firebase-database:20.0.0'
-    implementation 'org.jetbrains:annotations:15.0'
+    implementation 'org.jetbrains:annotations:21.0.1'
     implementation 'br.com.objectos:csv:0.1.0'
-
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

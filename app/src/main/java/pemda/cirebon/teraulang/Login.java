@@ -87,29 +87,6 @@ public class Login extends AppCompatActivity {
         AllowAccess();
     }
 
-    /*private void AllowAccess() {
-        String user = Objects.requireNonNull(username.getEditText()).toString();
-        String pass = Objects.requireNonNull(password.getEditText()).toString();
-
-        if (user.equals("12345") && pass.equals("eki")) {
-            Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Login.this, Dashboard.class);
-            startActivity(intent);
-        } else if (!user.equals("12345") && pass.equals("eki")) {
-            Toast.makeText(this, "Username Salah", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Login.this, Dashboard.class);
-            startActivity(intent);
-        } else if (user.equals("12345")) {
-            Toast.makeText(this, "Password Salah", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Login.this, Dashboard.class);
-            startActivity(intent);
-        } else{
-            AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-            builder.setMessage("Username atau Password Anda salah!")
-                    .setNegativeButton("Retry", null).create().show();
-        }
-    }*/
-
     private void AllowAccess()
     {
 
@@ -133,7 +110,7 @@ public class Login extends AppCompatActivity {
                     if (userData != null && userData.getNIP().equals(user)) {
                         if (userData.getPassword().equals(pass)) {
                             Toast.makeText(Login.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(Login.this, Dashboard.class);
+                            Intent intent = new Intent(Login.this, Dasboard.class);
                             Prevelante.currentUserOnline = userData;
                             startActivity(intent);
                         } else {

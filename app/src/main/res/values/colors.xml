@@ -7,6 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#fff</color>
+    <color name="colorPrimaryDark">#fff</color>
+    <color name="colorAccent">#448AFF</color>
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#757575</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#AF9F10</color>
     !--Coloring Toggle Input Tera--!
     <color name="blue">#FF005a9c</color>

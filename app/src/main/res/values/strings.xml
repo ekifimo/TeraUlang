@@ -2,6 +2,7 @@
     <string name="app_name">TeraUlang</string>
     <string name="upt_metrologi_kota_cirebon">UPT METROLOGI KOTA CIREBON</string>
     <string name="todo">todo</string>
+    <string name="srn_drawer_open">Open</string>
     <string name="tera_mobile">TERA MOBILE</string>
     <string name="tera_mobile2">Mobile</string>
     <string name="NIP">Nomor Induk Pegawai</string>
@@ -97,17 +98,6 @@
         <item>2009</item>
         <item>2008</item>
         <item>2007</item>
-        <item>2006</item>
-        <!--        <item>2005</item>-->
-        <!--        <item>2004</item>-->
-        <!--        <item>2003</item>-->
-        <!--        <item>2002</item>-->
-        <!--        <item>2001</item>-->
-        <!--        <item>2000</item>-->
-        <!--        <item>1999</item>-->
-        <!--        <item>1998</item>-->
-        <!--        <item>1997</item>-->
-        <!--        <item>1996</item>-->
     </string-array>
 
     <string-array name="Kecamatan">
@@ -117,16 +107,9 @@
         <item>Lemahwungkuk</item>
         <item>Pekalipan</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="keluar">Keluar</string>
+    <string name="srn_drawer_close">Close</string>
 
-    <!--    <string-array name="Kelurahan">-->
-    <!--        <item>Harjamukti</item>-->
-    <!--        <item>Kejaksan</item>-->
-    <!--        <item>Kesambi</item>-->
-    <!--        <item>Lemahwungkuk</item>-->
-    <!--        <item>Pekalipan</item>-->
-    <!--    </string-array>-->
-
+    <string name="srn_ex_no_menu_view">No view for menu provided. You must either call .withMenuView(View) or pass a valid resource id to .withMenuLayout(int)</string>
+    <string name="srn_ex_bad_content_view">Your content view must contain exactly one child. Make sure you call inject() after setContentView().</string>
 </resources>

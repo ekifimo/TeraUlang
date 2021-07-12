@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     if (userData != null && userData.getNIP().equals(user)) {
                         if (userData.getPassword().equals(pass)) {
                             Toast.makeText(MainActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MainActivity.this, Dashboard.class);
+                            Intent intent = new Intent(MainActivity.this, Dasboard.class);
                             Prevelante.currentUserOnline = userData;
                             startActivity(intent);
                         } else {

@@ -17,7 +17,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.TeraUlang">
-        <activity android:name=".Dasboard"></activity>
+        <activity android:name=".Dasboard"/>
         <activity android:name=".Profile" />
         <activity android:name=".Monitoring" />
         <activity
