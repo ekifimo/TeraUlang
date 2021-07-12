@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="ld_activityScreenTitles">
-        <item>Dashboard</item>
-        <item>My Account</item>
-        <item>Messages</item>
-        <item>Cart</item>
-        <item />
-        <item>Log Out</item>
+        <item/>
+        <item>Tera Ulang</item>
+        <item>Report Tera</item>
+        <item>Monitoring</item>
+        <item/>
     </string-array>
 
     <array name="ld_activityScreenIcons">
-        <item>@drawable/monitoring_icon</item>
-        <item>@drawable/profile</item>
+        <item>0</item>
         <item>@drawable/pensil_vector</item>
         <item>@drawable/balance_icon</item>
+        <item>@drawable/monitoring_icon</item>
         <item>0</item>
-        <item>@drawable/ic_main_menu</item>
     </array>
 </resources>

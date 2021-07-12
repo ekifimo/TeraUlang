@@ -2,9 +2,11 @@ package pemda.cirebon.teraulang;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -16,7 +18,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.material.textfield.TextInputLayout;
+
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,13 +39,13 @@ import java.util.Objects;
 
 public class RekamData extends AppCompatActivity {
 
-    TextInputLayout namaPemilik, noHp, kapasitas, anakTimbangan, biaya;
+    TextInputEditText namaPemilik, noHp, kapasitas, anakTimbangan, biaya, quantity;
     String saveCurrentDate, saveCurrentTime;
     TextView teraUlangAwal, teraUlangBrkt, emptyText;
     DatePickerDialog datePickerDialog;
     SimpleDateFormat simpleDateFormat, simpleDateFormat2;
     ArrayList<String> arrayList_parent;
-    ArrayList<String> arrayList_Harjamukti, arrayList_Kejaksan, arrayList_Kesambi, arrayList_Lemahwungkuk, arrayList_Pekalipan ;
+    ArrayList<String> arrayList_Harjamukti, arrayList_Kejaksan, arrayList_Kesambi, arrayList_Lemahwungkuk, arrayList_Pekalipan, arrayList_default ;
     ArrayAdapter<String> arrayAdapter_parent;
     ArrayAdapter<String> arrayAdapter_child;
     Button submitBtn;
@@ -75,14 +78,21 @@ public class RekamData extends AppCompatActivity {
         jtSpinner = findViewById(R.id.SpinnerTimbangan);
         emptyText = findViewById(R.id.invisble);
         backButton = findViewById(R.id.backbutton);
+        quantity = findViewById(R.id.Quantity);
 
         teraUlangAwal = findViewById(R.id.teraulangawal);
         teraUlangBrkt = findViewById(R.id.teraulangbrk);
         imageButton = findViewById(R.id.DateButton);
 
         imageButton.setOnClickListener(v -> {
+            v = this.getCurrentFocus();
+            if (v != null){
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
             if (jtSpinner.getSelectedItem().equals("Pilih Jenis Timbangan")) {
                 Toast.makeText(this, "Masukkan Jenis Timbangan", Toast.LENGTH_LONG).show();
+
             }
             else
                 showdatedialog();
@@ -103,6 +113,7 @@ public class RekamData extends AppCompatActivity {
         jtSpinner.setAdapter(adapter2);
 
         arrayList_parent = new ArrayList<>();
+        arrayList_parent.add("Pilih Kecamatan");
         arrayList_parent.add("Harjamukti");
         arrayList_parent.add("Kejaksan");
         arrayList_parent.add("Kesambi");
@@ -145,26 +156,32 @@ public class RekamData extends AppCompatActivity {
         arrayList_Pekalipan.add("Pekalipan");
         arrayList_Pekalipan.add("Pulasaren");
 
+        arrayList_default = new ArrayList<>();
+        arrayList_default.add("Pilih Kelurahan");
+
         kecamatanSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position==0){
+                    arrayAdapter_child = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_spinner, arrayList_default);
+                }
+                if (position==1){
                     arrayAdapter_child = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_spinner, arrayList_Harjamukti);
                     arrayAdapter_child.setDropDownViewResource(R.layout.custom_dropdown);
                 }
-                if (position==1){
+                if (position==2){
                     arrayAdapter_child = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_spinner, arrayList_Kejaksan);
                     arrayAdapter_child.setDropDownViewResource(R.layout.custom_dropdown);
                 }
-                if (position==2){
+                if (position==3){
                     arrayAdapter_child = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_spinner, arrayList_Kesambi);
                     arrayAdapter_child.setDropDownViewResource(R.layout.custom_dropdown);
                 }
-                if (position==3){
+                if (position==4){
                     arrayAdapter_child = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_spinner, arrayList_Lemahwungkuk);
                     arrayAdapter_child.setDropDownViewResource(R.layout.custom_dropdown);
                 }
-                if (position==4){
+                if (position==5){
                     arrayAdapter_child = new ArrayAdapter<>(getApplicationContext(), R.layout.custom_spinner, arrayList_Pekalipan);
                     arrayAdapter_child.setDropDownViewResource(R.layout.custom_dropdown);
                 }
@@ -183,12 +200,10 @@ public class RekamData extends AppCompatActivity {
             startActivity(intent);
         });
 
-        submitBtn.setOnClickListener(v -> {
-            Input();
-
-        });
+        submitBtn.setOnClickListener(v -> Input());
 
     }
+
 
 //    private void Tahun() {
 //        String teksKosong = emptyText.getText().toString();
@@ -255,18 +270,19 @@ public class RekamData extends AppCompatActivity {
 
         tanggalID = saveCurrentDate + saveCurrentTime;
 
-        String namaInput = Objects.requireNonNull(namaPemilik.getEditText()).getText().toString();
-        String noHpInput = Objects.requireNonNull(noHp.getEditText()).getText().toString();
+        String namaInput = namaPemilik.getEditableText().toString();
+        String noHpInput = noHp.getEditableText().toString();
         String alamatInput = Objects.requireNonNull(atAlamat.getText().toString());
         String kecamatanInput = kecamatanSpinner.getSelectedItem().toString();
         String kelurahanInput = kelurahanSpinner.getSelectedItem().toString();
         String jenisTimbanganInput = jtSpinner.getSelectedItem().toString();
-        String kapasitasInput = Objects.requireNonNull(kapasitas.getEditText()).getText().toString();
-        String anakTimbanganInput = Objects.requireNonNull(anakTimbangan.getEditText()).getText().toString();
-        String biayaInput = Objects.requireNonNull(biaya.getEditText()).getText().toString();
+        String kapasitasInput = kapasitas.getEditableText().toString();
+        String anakTimbanganInput = anakTimbangan.getEditableText().toString();
+        String biayaInput = biaya.getEditableText().toString();
         String tanggalTeraAwal = teraUlangAwal.getText().toString();
         String tanggalTeraAkhir = teraUlangAwal.getText().toString();
         String teksKosong = emptyText.getText().toString();
+        String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
 
 
         final DatabaseReference dbase;
@@ -288,11 +304,13 @@ public class RekamData extends AppCompatActivity {
                     userInputMap.put("TanggalTeraUlangAwal", tanggalTeraAwal);
                     userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
                     userInputMap.put("TanggalDropdown", teksKosong);
+                    userInputMap.put("Quantity", jumlah);
 
                     dbase.child(teksKosong).child(tanggalID).updateChildren(userInputMap)
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()){
                                     Toast.makeText(RekamData.this, "Input Tera Ulang berhasil", Toast.LENGTH_LONG).show();
+                                    setDefault();
                                 }
                                 else{
                                     Toast.makeText(RekamData.this, "Jaringan bermasalah", Toast.LENGTH_SHORT).show();
@@ -306,5 +324,28 @@ public class RekamData extends AppCompatActivity {
 
             }
         });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setDefault() {
+        namaPemilik.setText("");
+        noHp.setText("");
+        atAlamat.clearFocus();
+        kecamatanSpinner.setSelection(0);
+        kelurahanSpinner.setSelection(0);
+        jtSpinner.setSelection(0);
+        quantity.setText("");
+        kapasitas.setText("");
+        anakTimbangan.setText("");
+        biaya.setText("");
+        teraUlangAwal.setText("--");
+        teraUlangBrkt.setText("--");
+        namaPemilik.setFocusable(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, Dashboard.class);
+        startActivity(intent);
     }
 }

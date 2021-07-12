@@ -3,9 +3,11 @@ package pemda.cirebon.teraulang;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -18,6 +20,7 @@ public class ReportTera extends AppCompatActivity {
     TabLayout tabs;
     View viewIndicator;
     ViewPager viewPager;
+    ImageView backButton;
 
     private int indicatorWidth;
 
@@ -33,6 +36,12 @@ public class ReportTera extends AppCompatActivity {
         tabs = findViewById(R.id.tab);
         viewIndicator = findViewById(R.id.indicator);
         viewPager = findViewById(R.id.ViewPager);
+        backButton = findViewById(R.id.backbutton);
+
+        backButton.setOnClickListener(v-> {
+            Intent intent = new Intent(this, Dashboard.class);
+            startActivity(intent);
+        });
 
         TabFragment adapter = new TabFragment(getSupportFragmentManager());
         adapter.addFragment(Data_Fragment.newInstance(), "Data Tera");
@@ -71,4 +80,9 @@ public class ReportTera extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, Dashboard.class);
+        startActivity(intent);
+    }
 }

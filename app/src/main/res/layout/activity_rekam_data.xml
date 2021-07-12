@@ -24,7 +24,9 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:background="@drawable/back_button"
-            android:contentDescription="@string/todo" />
+            android:contentDescription="@string/todo"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="16dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,7 +38,9 @@
             android:fontFamily="@font/baloo"
             android:text="@string/input_tera_ulang"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:layout_marginLeft="32dp"
+            android:layout_toRightOf="@+id/backbutton" />
     </RelativeLayout>
 
     <ScrollView
@@ -66,7 +70,6 @@
                 android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/NamaPemilik"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -78,8 +81,10 @@
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/NamaPemilik"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
                     android:background="@drawable/back_field"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,7 +100,6 @@
                 android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/NoHp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,8 +115,10 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView3">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/NoHp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="number"
                     android:background="@drawable/back_field"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -146,6 +152,7 @@
                     android:id="@+id/dropdown_alamat"
                     android:hint="@string/pilih_alamat"
                     android:textColorHint="@color/white"
+                    android:inputType="textCapWords"
                     android:background="@drawable/back_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -193,28 +200,71 @@
                 android:background="@drawable/spinner_style">
             </Spinner>
 
-            <TextView
-                android:id="@+id/textView8"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/jenis_timbangan"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:layout_height="wrap_content">
 
-            <Spinner
-                android:id="@+id/SpinnerTimbangan"
-                android:layout_marginTop="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/spinner_style"
-                android:entries="@array/JenisTimbangan">
-            </Spinner>
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/jenis_timbangan"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
 
+                <Spinner
+                    android:id="@+id/SpinnerTimbangan"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="220dp"
+                    android:layout_height="55dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_below="@+id/textView8"
+                    android:background="@drawable/spinner_style"
+                    android:entries="@array/JenisTimbangan">
+                </Spinner>
+
+                <TextView
+                    android:id="@+id/QuantityTeks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/quantity"
+                    android:textColor="@color/white"
+                    android:layout_toEndOf="@+id/SpinnerTimbangan"
+                    android:textSize="16sp"
+                    android:layout_toRightOf="@+id/SpinnerTimbangan"
+                    android:layout_marginLeft="16dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/Qty"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:theme="@style/Rounded"
+                    app:boxStrokeColor="@color/white"
+                    app:boxStrokeWidth="2dp"
+                    app:hintEnabled="false"
+                    android:layout_toEndOf="@+id/SpinnerTimbangan"
+                    android:layout_below="@+id/QuantityTeks"
+                    android:layout_toRightOf="@+id/SpinnerTimbangan">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/Quantity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:background="@drawable/back_field"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </RelativeLayout>
             <TextView
                 android:id="@+id/textView9"
                 android:layout_width="match_parent"
@@ -233,7 +283,7 @@
                 android:layout_marginEnd="16dp">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/Kapasitas"
+                    android:id="@+id/Kpsts"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
@@ -244,13 +294,15 @@
                     app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/Kapasitas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="number"
                         android:background="@drawable/back_field"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RadioGroup
-                    android:layout_toEndOf="@id/Kapasitas"
+                    android:layout_toEndOf="@id/Kpsts"
                     android:checkedButton="@+id/G"
                     android:id="@+id/toggle"
                     android:layout_marginEnd="16dp"
@@ -259,7 +311,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:background="@drawable/control_switch_background_border"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_toRightOf="@id/Kpsts">
                     <RadioButton
                         android:id="@+id/G"
                         android:background="@drawable/control_switch_background_selector_middle"
@@ -295,7 +348,7 @@
                         android:textColor="@color/control_switch_color_selector" />
                 </RadioGroup>
                 <RadioGroup
-                    android:layout_toEndOf="@id/Kapasitas"
+                    android:layout_toEndOf="@id/Kpsts"
                     android:layout_alignParentBottom="true"
                     android:id="@+id/toggle2"
                     android:layout_marginEnd="16dp"
@@ -303,7 +356,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:background="@drawable/control_switch_background_border"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_toRightOf="@id/Kpsts">
                     <RadioButton
                         android:id="@+id/KG"
                         android:background="@drawable/control_switch_background_selector_middle"
@@ -352,7 +406,6 @@
                 android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/AnakTimbangan"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -365,8 +418,10 @@
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/AnakTimbangan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="number"
                     android:background="@drawable/back_field"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -382,7 +437,6 @@
                 android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/Biaya"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -395,8 +449,10 @@
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/Biaya"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="number"
                     android:background="@drawable/back_field"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -421,7 +477,8 @@
                     android:layout_marginStart="10dp"
                     android:layout_width="180dp"
                     android:layout_height="match_parent"
-                    android:background="#FF005a9c">
+                    android:background="#FF005a9c"
+                    android:layout_marginLeft="10dp">
 
                     <TextView
                         android:id="@+id/teraulangawal"
@@ -432,7 +489,9 @@
                         android:layout_centerInParent="true"
                         android:text="@string/dash"
                         android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="16dp" />
                 </RelativeLayout>
 
                 <ImageButton
@@ -441,8 +500,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_toEndOf="@+id/date"
+                    android:focusable="true"
                     android:background="@drawable/datepick_image"
-                    android:contentDescription="@string/todo" />
+                    android:contentDescription="@string/todo"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/date" />
 
                 <TextView
                     android:id="@+id/invisble"
@@ -450,7 +512,8 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/DateButton"
                     android:text="@string/empty"
-                    android:textColor="#00FFFFFF"/>
+                    android:textColor="#00FFFFFF"
+                    android:layout_toRightOf="@+id/DateButton" />
             </RelativeLayout>
 
             <TextView
@@ -475,7 +538,8 @@
                     android:layout_width="180dp"
                     android:layout_height="match_parent"
                     android:background="#FF005a9c"
-                    tools:ignore="UselessParent">
+                    tools:ignore="UselessParent"
+                    android:layout_marginLeft="10dp">
 
                     <TextView
                         android:id="@+id/teraulangbrk"
@@ -486,7 +550,9 @@
                         android:layout_centerInParent="true"
                         android:text="@string/dash"
                         android:textColor="@color/white"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="16dp" />
                 </RelativeLayout>
             </RelativeLayout>
             <androidx.appcompat.widget.AppCompatButton

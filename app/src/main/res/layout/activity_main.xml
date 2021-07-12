@@ -29,10 +29,11 @@
         android:layout_marginTop="32dp"
         android:contentDescription="@string/todo"
         android:src="@drawable/logoupt"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/Next"
         app:layout_constraintEnd_toStartOf="@+id/logopemda"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/judulapps" />
+        app:layout_constraintTop_toBottomOf="@+id/judulapps"
+        android:layout_marginLeft="32dp" />
 
     <ImageView
         android:id="@+id/logopemda"
@@ -41,16 +42,30 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:contentDescription="@string/todo"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/Next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/logoupt"
         app:layout_constraintTop_toBottomOf="@+id/judulapps"
-        app:srcCompat="@drawable/pemdalogo" />
+        app:srcCompat="@drawable/pemdalogo"
+        android:layout_marginRight="32dp" />
+
+    <ImageButton
+        android:id="@+id/Next"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:background="#00FFFFFF"
+        android:src="#00FFFFFF"
+        app:layout_constraintBottom_toTopOf="@id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logoupt"
+        android:contentDescription="@string/todo" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:gravity="center|bottom"
         android:text="@string/upt_metrologi_kota_cirebon"
@@ -59,7 +74,7 @@
         app:layout_constraintBottom_toTopOf="@id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logoupt" />
+        app:layout_constraintTop_toBottomOf="@+id/Next" />
 
     <TextView
         android:id="@+id/textView2"

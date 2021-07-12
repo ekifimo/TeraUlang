@@ -23,6 +23,8 @@ import pemda.cirebon.teraulang.Prevelant.Prevelante;
 
 public class MainActivity extends AppCompatActivity {
 
+   /* ImageButton next;*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+
+        /*next = findViewById(R.id.Next);
+
+        next.setOnClickListener(v->{
+            Intent intent = new Intent(this, Login.class);
+            startActivity(intent);
+        });*/
 
         Paper.init(this);
         String UserKey = Paper.book().read(Prevelante.UserKey);
@@ -48,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }, 2000);
         }
+
     }
 
     private void AllowAccess(String user, String pass) {
@@ -62,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     if (userData != null && userData.getNIP().equals(user)) {
                         if (userData.getPassword().equals(pass)) {
                             Toast.makeText(MainActivity.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MainActivity.this, Dasboard.class);
+                            Intent intent = new Intent(MainActivity.this, Dashboard.class);
                             Prevelante.currentUserOnline = userData;
                             startActivity(intent);
                         } else {

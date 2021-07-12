@@ -110,7 +110,7 @@ public class Login extends AppCompatActivity {
                     if (userData != null && userData.getNIP().equals(user)) {
                         if (userData.getPassword().equals(pass)) {
                             Toast.makeText(Login.this, "Login Berhasil", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(Login.this, Dasboard.class);
+                            Intent intent = new Intent(Login.this, Dashboard.class);
                             Prevelante.currentUserOnline = userData;
                             startActivity(intent);
                         } else {
