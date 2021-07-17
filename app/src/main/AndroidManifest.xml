@@ -17,9 +17,10 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.TeraUlang">
-        <activity android:name=".Dasboard"
-            android:theme="@style/Theme.Dashboard"/>
-        <activity android:name=".Profile" />
+        <activity android:name=".EditData" />
+        <activity
+            android:name=".Dasboard"
+            android:theme="@style/Theme.Dashboard" />
         <activity android:name=".Monitoring" />
         <activity
             android:name=".Fragment.Grafik_Fragment"
@@ -43,6 +44,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="pemda.cirebon.teraulang"

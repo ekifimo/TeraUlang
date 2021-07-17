@@ -3,7 +3,7 @@ package pemda.cirebon.teraulang.Model;
 public class TeraData {
 
     String Alamat, AnakTimbangan, Biaya, JenisTimbangan, Kapasitas, Kecamatan, Kelurahan,
-        Nama, NoHp, TanggalTeraUlangAwal, TanggalTeraUlangBerikutnya, TanggalDropdown;
+        Nama, NoHp, TanggalTeraUlangAwal, TanggalTeraUlangBerikutnya, TanggalDropdown, Quantity;
 
     public TeraData(){
 
@@ -11,7 +11,7 @@ public class TeraData {
 
     public TeraData(String alamat, String anakTimbangan, String biaya, String jenisTimbangan,
                     String kapasitas, String kecamatan, String kelurahan, String nama, String noHp,
-                    String tanggalTeraUlangAwal, String tanggalTeraUlangBerikutnya, String TanggalDropdown) {
+                    String tanggalTeraUlangAwal, String tanggalTeraUlangBerikutnya, String TanggalDropdown, String Quantity) {
         Alamat = alamat;
         AnakTimbangan = anakTimbangan;
         Biaya = biaya;
@@ -24,6 +24,7 @@ public class TeraData {
         TanggalTeraUlangAwal = tanggalTeraUlangAwal;
         TanggalTeraUlangBerikutnya = tanggalTeraUlangBerikutnya;
         TanggalDropdown = TanggalDropdown;
+        Quantity = Quantity;
     }
 
     public String getAlamat() {
@@ -120,5 +121,13 @@ public class TeraData {
 
     public void setTanggalDropdown(String tanggalDropdown) {
         TanggalDropdown = tanggalDropdown;
+    }
+
+    public String getQuantity() {
+        return Quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        Quantity = quantity;
     }
 }

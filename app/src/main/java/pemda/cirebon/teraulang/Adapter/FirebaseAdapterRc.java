@@ -5,19 +5,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
-import java.util.List;
-
 import pemda.cirebon.teraulang.Model.TeraData;
 import pemda.cirebon.teraulang.R;
 
@@ -51,9 +44,14 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
         holder.tvAlamat.setText(teraData.getAlamat());
         holder.tvKecamatan.setText(teraData.getKecamatan());
         holder.tvKelurahan.setText(teraData.getKelurahan());
-        holder.tvTimbangan.setText(teraData.getJenisTimbangan() + teraData.getAnakTimbangan());
-        holder.tvKapasitas.setText(teraData.getKapasitas());
+        holder.tvTimbangan.setText(teraData.getJenisTimbangan());
+        holder.tvQuantity.setText(teraData.getQuantity());
+        holder.tvAnakTimbangan.setText(teraData.getAnakTimbangan());
         holder.tvRetribusi.setText(teraData.getBiaya());
+
+        holder.btnDelet.setOnClickListener(v -> {
+
+        });
     }
 
     @Override
@@ -63,8 +61,9 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
 
     public static class myViewHolder extends RecyclerView.ViewHolder{
 
-        TextView tvTgl, tvNama, tvNoHp, tvAlamat, tvKecamatan, tvKelurahan, tvTimbangan, tvKapasitas,
-            tvRetribusi;
+        TextView tvTgl, tvNama, tvNoHp, tvAlamat, tvKecamatan, tvKelurahan, tvTimbangan, tvAnakTimbangan,
+            tvRetribusi, tvQuantity;
+        ImageButton btnEdit, btnDelet;
 
         public myViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -76,8 +75,13 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
             tvKecamatan = itemView.findViewById(R.id.kecamatan_tv);
             tvKelurahan = itemView.findViewById(R.id.kelurahan_tv);
             tvTimbangan = itemView.findViewById(R.id.timbangan_tv);
-            tvKapasitas = itemView.findViewById(R.id.kapasitas_tv);
+            tvQuantity = itemView.findViewById(R.id.quantity_tv);
+            tvAnakTimbangan = itemView.findViewById(R.id.AnakTimbangan_tv);
             tvRetribusi = itemView.findViewById(R.id.retribusi_tv);
+            btnEdit = itemView.findViewById(R.id.EditItem);
+            btnDelet = itemView.findViewById(R.id.DeleteItem);
         }
+
     }
+
 }
