@@ -37,10 +37,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import pemda.cirebon.teraulang.Model.TeraData;
+
 public class EditData extends AppCompatActivity {
 
     TextInputEditText namaPemilik, noHp, kapasitas, anakTimbangan, biaya, quantity;
     String saveCurrentDate, saveCurrentTime;
+    String dataID = "";
+    String tahunID = "";
     TextView teraUlangAwal, teraUlangBrkt, emptyText;
     DatePickerDialog datePickerDialog;
     SimpleDateFormat simpleDateFormat, simpleDateFormat2;
@@ -63,6 +67,8 @@ public class EditData extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        dataID = getIntent().getStringExtra("pid");
+        tahunID = getIntent().getStringExtra("tahun");
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         simpleDateFormat2 =  new SimpleDateFormat("yyyy");
 
@@ -195,12 +201,44 @@ public class EditData extends AppCompatActivity {
             }
         });
 
+        getData(dataID, tahunID);
+
         backButton.setOnClickListener(v->{
             Intent intent = new Intent(this, Dashboard.class);
             startActivity(intent);
         });
 
-        submitBtn.setOnClickListener(v -> Input());
+        submitBtn.setOnClickListener(v -> Input(dataID));
+
+    }
+
+    private void getData(String dataID, String tahunID) {
+        DatabaseReference dataReference = FirebaseDatabase.getInstance().getReference().child("InputTera").child(tahunID);
+
+        dataReference.child(dataID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    TeraData teraData = snapshot.getValue(TeraData.class);
+
+                    namaPemilik.setText(Objects.requireNonNull(teraData).getNama());
+                    noHp.setText(Objects.requireNonNull(teraData).getNoHp());
+                    atAlamat.setText(Objects.requireNonNull(teraData).getAlamat());
+                    anakTimbangan.setText(teraData.getAnakTimbangan());
+                    quantity.setText(teraData.getQuantity());
+                    kapasitas.setText(teraData.getKapasitas());
+                    biaya.setText(teraData.getBiaya());
+                    teraUlangAwal.setText(teraData.getTanggalTeraUlangAwal());
+                    teraUlangBrkt.setText(teraData.getTanggalTeraUlangBerikutnya());
+                    emptyText.setText(teraData.getTanggalDropdown());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
 
     }
 
@@ -231,7 +269,7 @@ public class EditData extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void Input() {
+    private void Input(String dataID) {
 
         String tanggalID;
 
@@ -264,8 +302,9 @@ public class EditData extends AppCompatActivity {
         dbase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if(!snapshot.child(tanggalID).exists()){
+                if(!snapshot.child(dataID).exists()){
                     HashMap<String, Object> userInputMap = new HashMap<>();
+                    userInputMap.put("PId", dataID);
                     userInputMap.put("Nama", namaInput);
                     userInputMap.put("NoHp", noHpInput);
                     userInputMap.put("Alamat", alamatInput);
@@ -275,15 +314,15 @@ public class EditData extends AppCompatActivity {
                     userInputMap.put("Kapasitas", kapasitasInput);
                     userInputMap.put("AnakTimbangan", anakTimbanganInput);
                     userInputMap.put("Biaya", biayaInput);
+                    userInputMap.put("TanggalDropdown", teksKosong);
                     userInputMap.put("TanggalTeraUlangAwal", tanggalTeraAwal);
                     userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
-                    userInputMap.put("TanggalDropdown", teksKosong);
                     userInputMap.put("Quantity", jumlah);
 
-                    dbase.child(teksKosong).child(tanggalID).updateChildren(userInputMap)
+                    dbase.child(teksKosong).child(dataID).updateChildren(userInputMap)
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()){
-                                    Toast.makeText(EditData.this, "Input Tera Ulang berhasil", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(EditData.this, "Update berhasil", Toast.LENGTH_LONG).show();
                                     setDefault();
                                 }
                                 else{

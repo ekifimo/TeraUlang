@@ -1,16 +1,31 @@
 package pemda.cirebon.teraulang.Adapter;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
+
+import io.paperdb.Paper;
+import pemda.cirebon.teraulang.Dashboard;
+import pemda.cirebon.teraulang.EditData;
+import pemda.cirebon.teraulang.Login;
 import pemda.cirebon.teraulang.Model.TeraData;
 import pemda.cirebon.teraulang.R;
 
@@ -49,7 +64,30 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
         holder.tvAnakTimbangan.setText(teraData.getAnakTimbangan());
         holder.tvRetribusi.setText(teraData.getBiaya());
 
+        holder.btnEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(context, EditData.class);
+            intent.putExtra("pid", teraData.getPId());
+            intent.putExtra("tahun", teraData.getTanggalDropdown());
+            context.startActivity(intent);
+        });
+
         holder.btnDelet.setOnClickListener(v -> {
+            new AlertDialog.Builder(context)
+                    .setTitle("Hapus Data")
+                    .setMessage("Yakin Ingin Menghapus Data ?")
+                    .setPositiveButton("Ya", (dialog, which) -> {
+                        DatabaseReference dref = FirebaseDatabase.getInstance().getReference().child("InputTera");
+                        dref.child(teraData.getTanggalDropdown()).child(teraData.getPId()).removeValue()
+                                .addOnCompleteListener(task -> {
+                                    Toast.makeText(context, "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show();
+                                    teraList.clear();
+                                    notifyDataSetChanged();
+                                });
+
+            })
+                .setNegativeButton("Tidak", (dialog, which) -> dialog.cancel())
+                    .show();
+
 
         });
     }

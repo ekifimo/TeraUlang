@@ -280,7 +280,7 @@ public class RekamData extends AppCompatActivity {
         String anakTimbanganInput = anakTimbangan.getEditableText().toString();
         String biayaInput = biaya.getEditableText().toString();
         String tanggalTeraAwal = teraUlangAwal.getText().toString();
-        String tanggalTeraAkhir = teraUlangAwal.getText().toString();
+        String tanggalTeraAkhir = teraUlangBrkt.getText().toString();
         String teksKosong = emptyText.getText().toString();
         String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
 
@@ -292,6 +292,7 @@ public class RekamData extends AppCompatActivity {
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if(!snapshot.child(tanggalID).exists()){
                     HashMap<String, Object> userInputMap = new HashMap<>();
+                    userInputMap.put("PId", tanggalID);
                     userInputMap.put("Nama", namaInput);
                     userInputMap.put("NoHp", noHpInput);
                     userInputMap.put("Alamat", alamatInput);
@@ -301,9 +302,9 @@ public class RekamData extends AppCompatActivity {
                     userInputMap.put("Kapasitas", kapasitasInput);
                     userInputMap.put("AnakTimbangan", anakTimbanganInput);
                     userInputMap.put("Biaya", biayaInput);
+                    userInputMap.put("TanggalDropdown", teksKosong);
                     userInputMap.put("TanggalTeraUlangAwal", tanggalTeraAwal);
                     userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
-                    userInputMap.put("TanggalDropdown", teksKosong);
                     userInputMap.put("Quantity", jumlah);
 
                     dbase.child(teksKosong).child(tanggalID).updateChildren(userInputMap)
