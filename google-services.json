@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "486548173804",
+    "firebase_url": "https://teraulang-default-rtdb.firebaseio.com",
+    "project_id": "teraulang",
+    "storage_bucket": "teraulang.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486548173804:android:ee7da4246ecbe5216906c9",
+        "android_client_info": {
+          "package_name": "pemda.cirebon.teraulang"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "486548173804-4957lf6m1rnvjshbigb8c8k5a72urc98.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pemda.cirebon.teraulang",
+            "certificate_hash": "1e1e0377ac47497b86d09490e91e49578e926c66"
+          }
+        },
+        {
+          "client_id": "486548173804-kgrid24m0fv3c4eui669gllcr1pusn9q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCumCL8NkyvkASOUWiYz7dUnPmOcjy6xN4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "486548173804-kgrid24m0fv3c4eui669gllcr1pusn9q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

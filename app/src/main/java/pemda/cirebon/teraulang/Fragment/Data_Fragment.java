@@ -25,11 +25,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -109,7 +114,30 @@ public class Data_Fragment extends Fragment {
     }
 
     private void fetchdata() {
-        dReference = FirebaseDatabase.getInstance().getReference("InputTera");
+
+        /*Add Database to Firestore*/
+
+        CollectionReference dbase = FirebaseFirestore.getInstance().collection("InputTera");
+
+        dbase.document("InputTera").collection(spinnerTahun).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()){
+                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                            for (DocumentSnapshot d : list){
+                                TeraData teraData = d.toObject(TeraData.class);
+                                tera.add(teraData);
+                                exportBtn.setVisibility(View.VISIBLE);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+
+        /*Add Database to FirebaseDatabase*/
+
+        /*dReference = FirebaseDatabase.getInstance().getReference("InputTera");
         dReference.child(spinnerTahun).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
@@ -125,7 +153,7 @@ public class Data_Fragment extends Fragment {
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 
     private void fetchingData() {

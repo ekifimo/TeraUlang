@@ -19,12 +19,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +40,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 public class RekamData extends AppCompatActivity {
@@ -284,8 +290,33 @@ public class RekamData extends AppCompatActivity {
         String teksKosong = emptyText.getText().toString();
         String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
 
+        CollectionReference dbase = FirebaseFirestore.getInstance().collection("InputTera");
 
-        final DatabaseReference dbase;
+        HashMap<String, Object> userInputMap = new HashMap<>();
+        userInputMap.put("PId", tanggalID);
+        userInputMap.put("Nama", namaInput);
+        userInputMap.put("NoHp", noHpInput);
+        userInputMap.put("Alamat", alamatInput);
+        userInputMap.put("Kecamatan", kecamatanInput);
+        userInputMap.put("Kelurahan", kelurahanInput);
+        userInputMap.put("JenisTimbangan", jenisTimbanganInput);
+        userInputMap.put("Kapasitas", kapasitasInput);
+        userInputMap.put("AnakTimbangan", anakTimbanganInput);
+        userInputMap.put("Biaya", biayaInput);
+        userInputMap.put("TanggalDropdown", teksKosong);
+        userInputMap.put("TanggalTeraUlangAwal", tanggalTeraAwal);
+        userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
+        userInputMap.put("Quantity", jumlah);
+
+        dbase.document("InputTera").collection(teksKosong).document(tanggalID).set(userInputMap)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Input Data Berhasil", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Jaringan Bermasalah", Toast.LENGTH_SHORT).show();
+                });
+
+        /*final DatabaseReference dbase;
         dbase = FirebaseDatabase.getInstance().getReference().child("InputTera");
         dbase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -324,7 +355,7 @@ public class RekamData extends AppCompatActivity {
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 
     @SuppressLint("SetTextI18n")
