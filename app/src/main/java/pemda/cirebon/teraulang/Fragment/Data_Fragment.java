@@ -117,7 +117,7 @@ public class Data_Fragment extends Fragment {
 
         /*Add Database to Firestore*/
 
-        CollectionReference dbase = FirebaseFirestore.getInstance().collection("InputTera");
+        /*CollectionReference dbase = FirebaseFirestore.getInstance().collection("InputTera");
 
         dbase.document("InputTera").collection(spinnerTahun).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -133,11 +133,11 @@ public class Data_Fragment extends Fragment {
                             adapter.notifyDataSetChanged();
                         }
                     }
-                });
+                });*/
 
         /*Add Database to FirebaseDatabase*/
 
-        /*dReference = FirebaseDatabase.getInstance().getReference("InputTera");
+        dReference = FirebaseDatabase.getInstance().getReference("InputTera");
         dReference.child(spinnerTahun).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
@@ -153,7 +153,7 @@ public class Data_Fragment extends Fragment {
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
 
     private void fetchingData() {

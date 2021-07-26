@@ -1,22 +1,22 @@
 package pemda.cirebon.teraulang.Model;
 
 public class DataPoint {
-    String Bulan;
+    int Bulan;
     int Count;
 
     public DataPoint(){
     }
 
-    public DataPoint(String bulan, int count) {
+    public DataPoint(int bulan, int count) {
         Bulan = bulan;
         Count = count;
     }
 
-    public String getBulan() {
+    public int getBulan() {
         return Bulan;
     }
 
-    public void setBulan(String bulan) {
+    public void setBulan(int bulan) {
         Bulan = bulan;
     }
 

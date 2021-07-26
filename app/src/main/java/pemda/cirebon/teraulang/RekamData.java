@@ -19,21 +19,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Transaction;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -300,7 +296,7 @@ public class RekamData extends AppCompatActivity {
 
         /*Add data Firestore*/
 
-        FirebaseFirestore dbase2 = FirebaseFirestore.getInstance();
+        /*FirebaseFirestore dbase2 = FirebaseFirestore.getInstance();
 
         dbase2.runTransaction((Transaction.Function<Void>) transaction -> {
             DocumentReference exampleNoteRef = dbase2.collection("InputTeraGrafik")
@@ -311,7 +307,43 @@ public class RekamData extends AppCompatActivity {
             long newCount = exampleSnapsnotRef.getLong("Count") + 1;
             transaction.update(exampleNoteRef, "Count", newCount);
             return null;
+        });*/
+
+        DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teksKosong).child(saveBulan);
+
+        dbase3.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                dbase3.runTransaction(new Transaction.Handler() {
+                    @NonNull
+                    @NotNull
+                    @Override
+                    public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
+                        HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                        if (tempdata == null){
+                            return Transaction.success(currentData);
+                        }
+                        long newCount = (Long) tempdata.get("Count") + 1;
+                        tempdata.put("Count", newCount);
+                        currentData.setValue(tempdata);
+                        return Transaction.success(currentData);
+                    }
+
+                    @Override
+                    public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
         });
+
+
         
 
         /*CollectionReference dbase = FirebaseFirestore.getInstance().collection("InputTera");
