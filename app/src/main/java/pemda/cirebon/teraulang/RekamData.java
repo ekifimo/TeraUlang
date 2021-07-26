@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,7 +30,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,9 +51,9 @@ public class RekamData extends AppCompatActivity {
 
     TextInputEditText namaPemilik, noHp, kapasitas, anakTimbangan, biaya, quantity;
     String saveCurrentDate, saveCurrentTime;
-    TextView teraUlangAwal, teraUlangBrkt, emptyText;
+    TextView teraUlangAwal, teraUlangBrkt, emptyText, emptyBulan;
     DatePickerDialog datePickerDialog;
-    SimpleDateFormat simpleDateFormat, simpleDateFormat2;
+    SimpleDateFormat simpleDateFormat, simpleDateFormat2, simpleDateFormat3;
     ArrayList<String> arrayList_parent;
     ArrayList<String> arrayList_Harjamukti, arrayList_Kejaksan, arrayList_Kesambi, arrayList_Lemahwungkuk, arrayList_Pekalipan, arrayList_default ;
     ArrayAdapter<String> arrayAdapter_parent;
@@ -71,6 +75,7 @@ public class RekamData extends AppCompatActivity {
 
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         simpleDateFormat2 =  new SimpleDateFormat("yyyy");
+        simpleDateFormat3 =  new SimpleDateFormat("MMM");
 
         namaPemilik = findViewById(R.id.NamaPemilik);
         kecamatanSpinner = findViewById(R.id.SpinnerKecamatan);
@@ -83,6 +88,7 @@ public class RekamData extends AppCompatActivity {
         atAlamat = findViewById(R.id.dropdown_alamat);
         jtSpinner = findViewById(R.id.SpinnerTimbangan);
         emptyText = findViewById(R.id.invisble);
+        emptyBulan = findViewById(R.id.invisble2);
         backButton = findViewById(R.id.backbutton);
         quantity = findViewById(R.id.Quantity);
 
@@ -247,6 +253,7 @@ public class RekamData extends AppCompatActivity {
             newDate.set(year, month, dayOfMonth);
             teraUlangAwal.setText(simpleDateFormat.format(newDate.getTime()));
             emptyText.setText(simpleDateFormat2.format(newDate.getTime()));
+            emptyBulan.setText(simpleDateFormat3.format(newDate.getTime()));
             if(Timbangan.matches("Timbangan Meja|Timbangan Sentisimal|Timbangan Pegas|Timbangan Elektronik|" +
                     "Timbangan Dacin Logam|Timbangan Jembatan|Timbangan Bobot Ingsut|Neraca Emas/Obat|" +
                     "PU BBM|Lain-Lain")){
@@ -288,9 +295,26 @@ public class RekamData extends AppCompatActivity {
         String tanggalTeraAwal = teraUlangAwal.getText().toString();
         String tanggalTeraAkhir = teraUlangBrkt.getText().toString();
         String teksKosong = emptyText.getText().toString();
+        String saveBulan = emptyBulan.getText().toString();
         String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
 
-        CollectionReference dbase = FirebaseFirestore.getInstance().collection("InputTera");
+        /*Add data Firestore*/
+
+        FirebaseFirestore dbase2 = FirebaseFirestore.getInstance();
+
+        dbase2.runTransaction((Transaction.Function<Void>) transaction -> {
+            DocumentReference exampleNoteRef = dbase2.collection("InputTeraGrafik")
+                    .document("Grafik")
+                    .collection(teksKosong)
+                    .document(saveBulan);
+            DocumentSnapshot exampleSnapsnotRef = transaction.get(exampleNoteRef);
+            long newCount = exampleSnapsnotRef.getLong("Count") + 1;
+            transaction.update(exampleNoteRef, "Count", newCount);
+            return null;
+        });
+        
+
+        /*CollectionReference dbase = FirebaseFirestore.getInstance().collection("InputTera");
 
         HashMap<String, Object> userInputMap = new HashMap<>();
         userInputMap.put("PId", tanggalID);
@@ -314,9 +338,11 @@ public class RekamData extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Jaringan Bermasalah", Toast.LENGTH_SHORT).show();
-                });
+                });*/
 
-        /*final DatabaseReference dbase;
+        /*Add data Firebase*/
+
+        final DatabaseReference dbase;
         dbase = FirebaseDatabase.getInstance().getReference().child("InputTera");
         dbase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -355,7 +381,7 @@ public class RekamData extends AppCompatActivity {
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
             }
-        });*/
+        });
     }
 
     @SuppressLint("SetTextI18n")
