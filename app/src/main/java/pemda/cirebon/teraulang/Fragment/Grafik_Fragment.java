@@ -16,12 +16,15 @@ import android.widget.Spinner;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -41,8 +44,8 @@ import pemda.cirebon.teraulang.R;
 
 public class Grafik_Fragment extends Fragment {
 
-    HorizontalBarChart barChart;
-    ArrayList<BarEntry> barEntryArrayList;
+    LineChart barChart;
+    ArrayList<Entry> barEntryArrayList;
     ArrayList<String> labelsNames;
     ArrayList<DataPoint> dataPointArrayList = new ArrayList<>();
     Spinner thSpinner;
@@ -119,12 +122,12 @@ public class Grafik_Fragment extends Fragment {
             labelsNames.add(month);
         }
 
-        BarDataSet barDataSet = new BarDataSet(barEntryArrayList, "Grafik Tera Ulang");
+        LineDataSet barDataSet = new LineDataSet(barEntryArrayList, "Grafik Tera Ulang");
         barDataSet.setColor(Color.YELLOW);
         Description description = new Description();
         description.setText("Bulan");
         barChart.setDescription(description);
-        BarData barData = new BarData(barDataSet);
+        LineData barData = new LineData(barDataSet);
         barChart.setData(barData);
         /*Set Value xAxis value formatter*/
         XAxis xAxis = barChart.getXAxis();

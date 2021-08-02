@@ -336,8 +336,9 @@ public class RekamData extends AppCompatActivity {
                 if (!snapshot.child(id).exists()){
                     HashMap<String, Object> userInputMap = new HashMap<>();
                     userInputMap.put("Nama", namaInput);
-                    userInputMap.put("TanggalMonitoring", teksTimeMilis);
+                    userInputMap.put("UnixTimestamp", teksTimeMilis);
                     userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
+                    userInputMap.put("TanggalMonitoring", teksTimeFormat + " GMT+07:00 " + teksKosong);
 
                     dbase4.child(id).updateChildren(userInputMap);
                 }

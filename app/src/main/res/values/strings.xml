@@ -101,4 +101,5 @@
     <string name="srn_ex_bad_content_view">Your content view must contain exactly one child. Make sure you call inject() after setContentView().</string>
     <string name="next">Next</string>
     <string name="quantity">Quantity</string>
+    <string name="testing">Testing</string>
 </resources>
