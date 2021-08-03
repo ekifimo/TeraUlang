@@ -56,9 +56,11 @@ public class Dashboard extends AppCompatActivity {
                 .setMessage("Yakin ingin keluar?")
                 .setPositiveButton("OK", (dialog, which) -> {
                     Paper.book().destroy();
-                    Intent intent = new Intent(Dashboard.this, Login.class);
-                    startActivity(intent);
-                    finish();
+                    Intent startMain = new Intent(Intent.ACTION_MAIN);
+                    startMain.addCategory(Intent.CATEGORY_HOME);
+                    startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(startMain);
+                    super.onBackPressed();
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
                 .show();

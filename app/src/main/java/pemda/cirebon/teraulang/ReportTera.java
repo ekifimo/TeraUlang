@@ -84,5 +84,6 @@ public class ReportTera extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent(this, Dashboard.class);
         startActivity(intent);
+        finish();
     }
 }

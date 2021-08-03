@@ -72,18 +72,24 @@ public class Grafik_Fragment extends Fragment {
         thSpinner = view.findViewById(R.id.PilihTahun);
         thSpinner.setAdapter(adapter2);
 
-        thSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                spinnerTahun = parent.getItemAtPosition(position).toString();
-                retrieveData();
-            }
+        final int[] iSelect = {thSpinner.getSelectedItemPosition()};
+            thSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (iSelect[0] == position){
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                    } else {
+                        spinnerTahun = parent.getItemAtPosition(position).toString();
+                        retrieveData();
+                        dataPointArrayList.clear();
+                    }
+                }
 
-            }
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
     }
 
     private void retrieveData() {
@@ -98,10 +104,10 @@ public class Grafik_Fragment extends Fragment {
                         dataPointArrayList.add(new DataPoint(dataPoint.getBulan(), dataPoint.getCount()));
                     }
                     showChart(dataPointArrayList);
-                } else {
+                } /*else {
                     barChart.clear();
                     barChart.invalidate();
-                }
+                }*/
             }
 
             @Override
@@ -125,7 +131,7 @@ public class Grafik_Fragment extends Fragment {
         LineDataSet barDataSet = new LineDataSet(barEntryArrayList, "Grafik Tera Ulang");
         barDataSet.setColor(Color.YELLOW);
         Description description = new Description();
-        description.setText("Bulan");
+        description.setText("Jumlah Tera Ulang");
         barChart.setDescription(description);
         LineData barData = new LineData(barDataSet);
         barChart.setData(barData);

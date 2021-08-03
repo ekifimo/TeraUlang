@@ -15,4 +15,13 @@
         <item>@drawable/monitoring_icon</item>
         <item>0</item>
     </array>
+
+    <string-array name="radio_buttons">
+        <item>Kg</item>
+        <item>G</item>
+        <item>Cm</item>
+        <item>M3h</item>
+        <item>M</item>
+        <item>L</item>
+    </string-array>
 </resources>

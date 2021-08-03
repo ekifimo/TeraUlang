@@ -302,7 +302,7 @@
                         android:background="@drawable/back_field"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <RadioGroup
+                <!--<RadioGroup
                     android:layout_toEndOf="@id/Kpsts"
                     android:checkedButton="@+id/G"
                     android:id="@+id/toggle"
@@ -338,6 +338,17 @@
                         android:textColor="@color/control_switch_color_selector"/>
                     <RadioButton
                         android:id="@+id/m3h"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/control_switch_background_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="@string/m3_h"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/control_switch_color_selector" />
+                    <RadioButton
+                        android:id="@+id/m3h2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -392,7 +403,20 @@
                         android:text="@string/l"
                         android:fontFamily="sans-serif-medium"
                         android:textColor="@color/control_switch_color_selector" />
-                </RadioGroup>
+                </RadioGroup>-->
+
+                <com.whygraphics.multilineradiogroup.MultiLineRadioGroup
+                    xmlns:multi_line_radio_group="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/main_activity_multi_line_radio_group"
+                    android:layout_toEndOf="@id/Kpsts"
+                    android:layout_marginStart="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    multi_line_radio_group:default_button="button_2"
+                    multi_line_radio_group:max_in_row="3"
+                    multi_line_radio_group:radio_buttons="@array/radio_buttons"
+                    android:layout_toRightOf="@id/Kpsts"
+                    android:layout_marginLeft="8dp" />
             </RelativeLayout>
 
             <TextView

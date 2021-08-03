@@ -38,7 +38,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.2.0')
     implementation 'io.github.pilgr:paperdb:2.7.1'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'com.firebaseui:firebase-ui-database:7.2.0'
     implementation 'com.google.firebase:firebase-database:20.0.1'
@@ -46,6 +46,7 @@ dependencies {
     implementation 'org.jetbrains:annotations:21.0.1'
     implementation 'br.com.objectos:csv:0.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.github.Gavras:MultiLineRadioGroup:v1.0.0.6'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

@@ -31,6 +31,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.type.DateTime;
+import com.whygraphics.multilineradiogroup.MultiLineRadioGroup;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -61,6 +62,7 @@ public class RekamData extends AppCompatActivity {
     AutoCompleteTextView atAlamat;
     ImageButton imageButton, backButton;
     Spinner jtSpinner, kecamatanSpinner, kelurahanSpinner;
+    MultiLineRadioGroup multiLineRadioGroup;
 
     @SuppressLint({"WrongViewCast", "CutPasteId", "SimpleDateFormat"})
     @Override
@@ -77,7 +79,7 @@ public class RekamData extends AppCompatActivity {
         simpleDateFormat3 =  new SimpleDateFormat("MMM");
         simpleDateFormat4 = new SimpleDateFormat("EEE MMM dd HH:mm:ss", Locale.ENGLISH);
 
-
+        multiLineRadioGroup = findViewById(R.id.main_activity_multi_line_radio_group);
         namaPemilik = findViewById(R.id.NamaPemilik);
         kecamatanSpinner = findViewById(R.id.SpinnerKecamatan);
         kelurahanSpinner = findViewById(R.id.SpinnerKelurahan);
@@ -215,7 +217,18 @@ public class RekamData extends AppCompatActivity {
             startActivity(intent);
         });
 
-        submitBtn.setOnClickListener(v -> Input());
+        submitBtn.setOnClickListener(v -> {
+            if (namaPemilik.equals("")){
+                namaPemilik.setError("Masukkan Nama");
+                noHp.setError("Masukkan No Hp");
+                atAlamat.setError("Masukkan Alamat");
+                anakTimbangan.setError("Masukkan Anak Timbangan");
+                quantity.setError("Masukkan Quantity");
+                biaya.setError("Masukkan Biaya");
+            } else {
+                Input();
+            }
+        });
 
     }
 
@@ -281,6 +294,7 @@ public class RekamData extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    @SuppressLint("ResourceType")
     private void Input() {
 
         String tanggalID;
@@ -307,11 +321,128 @@ public class RekamData extends AppCompatActivity {
         String tanggalTeraAkhir = teraUlangBrkt.getText().toString();
         String teksKosong = emptyText.getText().toString();
         String saveBulan = emptyBulan.getText().toString();
-        String teksTimeMilis = emptyTimeMillis.getText().toString();
+        String time = emptyTimeMillis.getText().toString();
+        long teksTimeMilis = Long.parseLong(time);
         String teksTimeFormat = emptyTimeFormat.getText().toString();
+        String satuan = multiLineRadioGroup.getCheckedRadioButtonText().toString();
         String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
 
+        if (namaInput.isEmpty() | noHpInput.isEmpty() | alamatInput.isEmpty() | kecamatanInput.isEmpty() | kelurahanInput.isEmpty()
+                | jenisTimbanganInput.isEmpty() | kapasitasInput.isEmpty() | biayaInput.isEmpty() | jumlah.isEmpty()
+                | tanggalTeraAwal.isEmpty() | tanggalTeraAkhir.isEmpty()){
+            namaPemilik.setError("Masukkan Nama");
+            noHp.setError("Masukkan No Hp");
+            atAlamat.setError("Masukkan Alamat");
+            quantity.setError("Masukkan Quantity");
+            kapasitas.setError("Masukkan Kapasitas");
+            anakTimbangan.setError("Masukkan Anak Timbangan");
+            biaya.setError("Masukkan Biaya");
+        } else {
 
+            /*Grafik*/
+
+            DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teksKosong).child(saveBulan);
+            dbase3.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                    dbase3.runTransaction(new Transaction.Handler() {
+                        @NonNull
+                        @NotNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
+                            HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                            if (tempdata == null){
+                                return Transaction.success(currentData);
+                            }
+                            long newCount = (Long) tempdata.get("Count") + 1;
+                            tempdata.put("Count", newCount);
+                            currentData.setValue(tempdata);
+                            return Transaction.success(currentData);
+                        }
+
+                        @Override
+                        public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
+
+            /*Monitoring*/
+
+            DatabaseReference dbase4 = FirebaseDatabase.getInstance().getReference().child("Monitoring");
+            String id  = dbase4.push().getKey();
+            dbase4.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    if (!snapshot.child(id).exists()){
+                        HashMap<String, Object> userInputMap = new HashMap<>();
+                        userInputMap.put("Nama", namaInput);
+                        userInputMap.put("UnixTimestamp", teksTimeMilis);
+                        userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
+                        userInputMap.put("TanggalMonitoring", teksTimeFormat + " GMT+07:00 " + teksKosong);
+
+                        dbase4.child(id).updateChildren(userInputMap);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
+
+            /*Input Tera*/
+
+            final DatabaseReference dbase;
+            dbase = FirebaseDatabase.getInstance().getReference().child("InputTera");
+            dbase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    if(!snapshot.child(tanggalID).exists()){
+                        HashMap<String, Object> userInputMap = new HashMap<>();
+                        userInputMap.put("PId", tanggalID);
+                        userInputMap.put("Nama", namaInput);
+                        userInputMap.put("NoHp", noHpInput);
+                        userInputMap.put("Alamat", alamatInput);
+                        userInputMap.put("Kecamatan", kecamatanInput);
+                        userInputMap.put("Kelurahan", kelurahanInput);
+                        userInputMap.put("JenisTimbangan", jenisTimbanganInput);
+                        userInputMap.put("Kapasitas", kapasitasInput);
+                        userInputMap.put("AnakTimbangan", anakTimbanganInput);
+                        userInputMap.put("Biaya", biayaInput);
+                        userInputMap.put("TanggalMonitoring", teksTimeFormat);
+                        userInputMap.put("TanggalDropdown", teksKosong);
+                        userInputMap.put("TanggalTeraUlangAwal", tanggalTeraAwal);
+                        userInputMap.put("Satuan", satuan);
+                        userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
+                        userInputMap.put("Quantity", jumlah);
+
+                        dbase.child(teksKosong).child(tanggalID).updateChildren(userInputMap)
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(RekamData.this, "Input Tera Ulang berhasil", Toast.LENGTH_LONG).show();
+                                        setDefault();
+                                    }
+                                    else{
+                                        Toast.makeText(RekamData.this, "Jaringan bermasalah", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
+        }
 
         /*Add data Firestore*/
 
@@ -327,62 +458,6 @@ public class RekamData extends AppCompatActivity {
             transaction.update(exampleNoteRef, "Count", newCount);
             return null;
         });*/
-
-        DatabaseReference dbase4 = FirebaseDatabase.getInstance().getReference().child("Monitoring");
-        String id  = dbase4.push().getKey();
-        dbase4.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if (!snapshot.child(id).exists()){
-                    HashMap<String, Object> userInputMap = new HashMap<>();
-                    userInputMap.put("Nama", namaInput);
-                    userInputMap.put("UnixTimestamp", teksTimeMilis);
-                    userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
-                    userInputMap.put("TanggalMonitoring", teksTimeFormat + " GMT+07:00 " + teksKosong);
-
-                    dbase4.child(id).updateChildren(userInputMap);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
-
-        DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teksKosong).child(saveBulan);
-        dbase3.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-
-                dbase3.runTransaction(new Transaction.Handler() {
-                    @NonNull
-                    @NotNull
-                    @Override
-                    public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
-                        HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
-                        if (tempdata == null){
-                            return Transaction.success(currentData);
-                        }
-                        long newCount = (Long) tempdata.get("Count") + 1;
-                        tempdata.put("Count", newCount);
-                        currentData.setValue(tempdata);
-                        return Transaction.success(currentData);
-                    }
-
-                    @Override
-                    public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
-
 
         /*CollectionReference dbase = FirebaseFirestore.getInstance().collection("InputTera");
 
@@ -411,48 +486,6 @@ public class RekamData extends AppCompatActivity {
                 });*/
 
         /*Add data Firebase*/
-
-        final DatabaseReference dbase;
-        dbase = FirebaseDatabase.getInstance().getReference().child("InputTera");
-        dbase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if(!snapshot.child(tanggalID).exists()){
-                    HashMap<String, Object> userInputMap = new HashMap<>();
-                    userInputMap.put("PId", tanggalID);
-                    userInputMap.put("Nama", namaInput);
-                    userInputMap.put("NoHp", noHpInput);
-                    userInputMap.put("Alamat", alamatInput);
-                    userInputMap.put("Kecamatan", kecamatanInput);
-                    userInputMap.put("Kelurahan", kelurahanInput);
-                    userInputMap.put("JenisTimbangan", jenisTimbanganInput);
-                    userInputMap.put("Kapasitas", kapasitasInput);
-                    userInputMap.put("AnakTimbangan", anakTimbanganInput);
-                    userInputMap.put("Biaya", biayaInput);
-                    userInputMap.put("TanggalMonitoring", teksTimeFormat);
-                    userInputMap.put("TanggalDropdown", teksKosong);
-                    userInputMap.put("TanggalTeraUlangAwal", tanggalTeraAwal);
-                    userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
-                    userInputMap.put("Quantity", jumlah);
-
-                    dbase.child(teksKosong).child(tanggalID).updateChildren(userInputMap)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()){
-                                    Toast.makeText(RekamData.this, "Input Tera Ulang berhasil", Toast.LENGTH_LONG).show();
-                                    setDefault();
-                                }
-                                else{
-                                    Toast.makeText(RekamData.this, "Jaringan bermasalah", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -476,5 +509,6 @@ public class RekamData extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent(this, Dashboard.class);
         startActivity(intent);
+        finish();
     }
 }
