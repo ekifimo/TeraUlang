@@ -14,18 +14,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
-import io.paperdb.Paper;
-import pemda.cirebon.teraulang.Dashboard;
 import pemda.cirebon.teraulang.EditData;
-import pemda.cirebon.teraulang.Login;
 import pemda.cirebon.teraulang.Model.TeraData;
 import pemda.cirebon.teraulang.R;
 
@@ -83,6 +83,37 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
                                     teraList.clear();
                                     notifyDataSetChanged();
                                 });
+
+                        DatabaseReference dRef = FirebaseDatabase.getInstance().getReference().child("Monitoring");
+                        Query query = dRef.child(teraData.getTanggalMonitoring()).orderByChild("PId").equalTo(teraData.getPId());
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                for (DataSnapshot deleteSnapsnot : snapshot.getChildren()){
+                                    deleteSnapsnot.getRef().removeValue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                            }
+                        });
+
+                        Query query1 = dref.orderByChild("PId").equalTo(teraData.getPId());
+                        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                for (DataSnapshot deleteSnapshot : snapshot.getChildren()){
+                                    deleteSnapshot.getRef().removeValue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                            }
+                        });
 
             })
                 .setNegativeButton("Tidak", (dialog, which) -> dialog.cancel())

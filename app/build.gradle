@@ -47,6 +47,7 @@ dependencies {
     implementation 'br.com.objectos:csv:0.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.github.Gavras:MultiLineRadioGroup:v1.0.0.6'
+    implementation 'com.github.mahimrocky:EventCalender:v1.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

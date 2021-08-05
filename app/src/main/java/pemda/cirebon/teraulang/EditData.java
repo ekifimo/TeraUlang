@@ -1,8 +1,5 @@
 package pemda.cirebon.teraulang;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -19,12 +16,19 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.whygraphics.multilineradiogroup.MultiLineRadioGroup;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,9 +49,9 @@ public class EditData extends AppCompatActivity {
     String saveCurrentDate, saveCurrentTime;
     String dataID = "";
     String tahunID = "";
-    TextView teraUlangAwal, teraUlangBrkt, emptyText;
+    TextView teraUlangAwal, teraUlangBrkt, emptyText, emptyBulan, emptyTimeMillis, emptyTimeFormat, emptyTimeMili;
     DatePickerDialog datePickerDialog;
-    SimpleDateFormat simpleDateFormat, simpleDateFormat2;
+    SimpleDateFormat simpleDateFormat, simpleDateFormat2, simpleDateFormat3, simpleDateFormat4;
     ArrayList<String> arrayList_parent;
     ArrayList<String> arrayList_Harjamukti, arrayList_Kejaksan, arrayList_Kesambi, arrayList_Lemahwungkuk, arrayList_Pekalipan, arrayList_default ;
     ArrayAdapter<String> arrayAdapter_parent;
@@ -56,6 +60,7 @@ public class EditData extends AppCompatActivity {
     AutoCompleteTextView atAlamat;
     ImageButton imageButton, backButton;
     Spinner jtSpinner, kecamatanSpinner, kelurahanSpinner;
+    MultiLineRadioGroup multiLineRadioGroup;
 
     @SuppressLint({"WrongViewCast", "CutPasteId", "SimpleDateFormat"})
     @Override
@@ -71,7 +76,10 @@ public class EditData extends AppCompatActivity {
         tahunID = getIntent().getStringExtra("tahun");
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         simpleDateFormat2 =  new SimpleDateFormat("yyyy");
+        simpleDateFormat3 =  new SimpleDateFormat("MMM");
+        simpleDateFormat4 = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH);
 
+        multiLineRadioGroup = findViewById(R.id.main_activity_multi_line_radio_group);
         namaPemilik = findViewById(R.id.NamaPemilik);
         kecamatanSpinner = findViewById(R.id.SpinnerKecamatan);
         kelurahanSpinner = findViewById(R.id.SpinnerKelurahan);
@@ -83,6 +91,10 @@ public class EditData extends AppCompatActivity {
         atAlamat = findViewById(R.id.dropdown_alamat);
         jtSpinner = findViewById(R.id.SpinnerTimbangan);
         emptyText = findViewById(R.id.invisble);
+        emptyBulan = findViewById(R.id.invisble2);
+        emptyTimeMillis = findViewById(R.id.invisble3);
+        emptyTimeFormat = findViewById(R.id.invisble4);
+        emptyTimeMili = findViewById(R.id.invisble5);
         backButton = findViewById(R.id.backbutton);
         quantity = findViewById(R.id.Quantity);
 
@@ -253,6 +265,19 @@ public class EditData extends AppCompatActivity {
             newDate.set(year, month, dayOfMonth);
             teraUlangAwal.setText(simpleDateFormat.format(newDate.getTime()));
             emptyText.setText(simpleDateFormat2.format(newDate.getTime()));
+            emptyBulan.setText(simpleDateFormat3.format(newDate.getTime()));
+            newDate.set(Calendar.HOUR_OF_DAY, 0);
+            newDate.set(Calendar.MINUTE, 0);
+            newDate.set(Calendar.SECOND, 0);
+            emptyTimeFormat.setText(simpleDateFormat4.format(newDate.getTime()));
+            long timeStamp = newDate.getTimeInMillis();
+            String ts = Long.toString(timeStamp);
+            emptyTimeMillis.setText(ts);
+
+            long timestamp2 = newDate.getTimeInMillis() /1000;
+            String ts2 = Long.toString(timestamp2);
+            emptyTimeMili.setText(ts2);
+
             if(Timbangan.matches("Timbangan Meja|Timbangan Sentisimal|Timbangan Pegas|Timbangan Elektronik|" +
                     "Timbangan Dacin Logam|Timbangan Jembatan|Timbangan Bobot Ingsut|Neraca Emas/Obat|" +
                     "PU BBM|Lain-Lain")){
@@ -271,7 +296,7 @@ public class EditData extends AppCompatActivity {
 
     private void Input(String dataID) {
 
-        String tanggalID;
+        /*String tanggalID;
 
         Calendar calendar = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat currentDate = new SimpleDateFormat("yyyy-MMM-dd ");
@@ -280,7 +305,7 @@ public class EditData extends AppCompatActivity {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
         saveCurrentTime = currentTime.format(calendar.getTime());
 
-        tanggalID = saveCurrentDate + saveCurrentTime;
+        tanggalID = saveCurrentDate + saveCurrentTime;*/
 
         String namaInput = namaPemilik.getEditableText().toString();
         String noHpInput = noHp.getEditableText().toString();
@@ -292,51 +317,159 @@ public class EditData extends AppCompatActivity {
         String anakTimbanganInput = anakTimbangan.getEditableText().toString();
         String biayaInput = biaya.getEditableText().toString();
         String tanggalTeraAwal = teraUlangAwal.getText().toString();
-        String tanggalTeraAkhir = teraUlangAwal.getText().toString();
+        String tanggalTeraAkhir = teraUlangBrkt.getText().toString();
         String teksKosong = emptyText.getText().toString();
+        String saveBulan = emptyBulan.getText().toString();
+        String time = emptyTimeMillis.getText().toString();
+        String time2 = emptyTimeMili.getText().toString();
+        long teksTimeMilis = Long.parseLong(time);
+        long teksTimeMilis2 = Long.parseLong(time2);
+        String teksTimeFormat = emptyTimeFormat.getText().toString();
+        String satuan = multiLineRadioGroup.getCheckedRadioButtonText().toString();
         String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
 
+        if (namaInput.isEmpty() | noHpInput.isEmpty() | alamatInput.isEmpty() | kecamatanInput.isEmpty() | kelurahanInput.isEmpty()
+                | jenisTimbanganInput.isEmpty() | kapasitasInput.isEmpty() | biayaInput.isEmpty() | jumlah.isEmpty()
+                | tanggalTeraAwal.isEmpty() | tanggalTeraAkhir.isEmpty()){
+            namaPemilik.setError("Masukkan Nama");
+            noHp.setError("Masukkan No Hp");
+            atAlamat.setError("Masukkan Alamat");
+            quantity.setError("Masukkan Quantity");
+            kapasitas.setError("Masukkan Kapasitas");
+            anakTimbangan.setError("Masukkan Anak Timbangan");
+            biaya.setError("Masukkan Biaya");
+        } else {
 
-        final DatabaseReference dbase;
-        dbase = FirebaseDatabase.getInstance().getReference().child("InputTera");
-        dbase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if(!snapshot.child(dataID).exists()){
-                    HashMap<String, Object> userInputMap = new HashMap<>();
-                    userInputMap.put("PId", dataID);
-                    userInputMap.put("Nama", namaInput);
-                    userInputMap.put("NoHp", noHpInput);
-                    userInputMap.put("Alamat", alamatInput);
-                    userInputMap.put("Kecamatan", kecamatanInput);
-                    userInputMap.put("Kelurahan", kelurahanInput);
-                    userInputMap.put("JenisTimbangan", jenisTimbanganInput);
-                    userInputMap.put("Kapasitas", kapasitasInput);
-                    userInputMap.put("AnakTimbangan", anakTimbanganInput);
-                    userInputMap.put("Biaya", biayaInput);
-                    userInputMap.put("TanggalDropdown", teksKosong);
-                    userInputMap.put("TanggalTeraUlangAwal", tanggalTeraAwal);
-                    userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
-                    userInputMap.put("Quantity", jumlah);
+            /*Grafik*/
 
-                    dbase.child(teksKosong).child(dataID).updateChildren(userInputMap)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()){
-                                    Toast.makeText(EditData.this, "Update berhasil", Toast.LENGTH_LONG).show();
-                                    setDefault();
-                                }
-                                else{
-                                    Toast.makeText(EditData.this, "Jaringan bermasalah", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+            DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teksKosong).child(saveBulan);
+            dbase3.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                    dbase3.runTransaction(new Transaction.Handler() {
+                        @NonNull
+                        @NotNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
+                            HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                            if (tempdata == null){
+                                return Transaction.success(currentData);
+                            }
+                            long newCount = (Long) tempdata.get("Count") + 1;
+                            tempdata.put("Count", newCount);
+                            currentData.setValue(tempdata);
+                            return Transaction.success(currentData);
+                        }
+
+                        @Override
+                        public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
+
+                        }
+                    });
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+
+            /*Monitoring*/
+
+            DatabaseReference dbase4 = FirebaseDatabase.getInstance().getReference().child("Monitoring");
+            String id = dbase4.push().getKey();
+            dbase4.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    if (!snapshot.child(id).exists()){
+                        HashMap<String, Object> userInputMap = new HashMap<>();
+                        userInputMap.put("Nama", namaInput);
+                        /*userInputMap.put("Pid", tanggalID);*/
+                        userInputMap.put("NoHp", noHpInput);
+                        userInputMap.put("Alamat", alamatInput);
+                        userInputMap.put("Quantity", jumlah);
+                        userInputMap.put("JenisTimbangan", jenisTimbanganInput);
+                        userInputMap.put("Kapasitas", kapasitasInput);
+                        userInputMap.put("AnakTimbangan", anakTimbanganInput);
+                        userInputMap.put("UnixTimestamp", teksTimeMilis);
+                        userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
+                        userInputMap.put("TanggalMonitoring", teksTimeFormat);
+
+                        dbase4.child(teksTimeFormat).child(id).updateChildren(userInputMap);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
+
+            dbase4.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    if (!snapshot.child(id).exists()){
+                        HashMap<String, Object> userInputMap = new HashMap<>();
+                        /*userInputMap.put("Pid", tanggalID);*/
+                        userInputMap.put("UnixTimestamp", teksTimeMilis);
+                        userInputMap.put("TanggalMonitoring", teksTimeFormat);
+
+                        dbase4.child(id).updateChildren(userInputMap);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
+
+            /*Input Tera*/
+
+            final DatabaseReference dbase;
+            dbase = FirebaseDatabase.getInstance().getReference().child("InputTera");
+            dbase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    if(!snapshot.child(dataID).exists()){
+                        HashMap<String, Object> userInputMap = new HashMap<>();
+                        userInputMap.put("PId", dataID);
+                        userInputMap.put("Nama", namaInput);
+                        userInputMap.put("NoHp", noHpInput);
+                        userInputMap.put("Alamat", alamatInput);
+                        userInputMap.put("Kecamatan", kecamatanInput);
+                        userInputMap.put("Kelurahan", kelurahanInput);
+                        userInputMap.put("JenisTimbangan", jenisTimbanganInput);
+                        userInputMap.put("Kapasitas", kapasitasInput);
+                        userInputMap.put("AnakTimbangan", anakTimbanganInput);
+                        userInputMap.put("Biaya", biayaInput);
+                        userInputMap.put("TanggalMonitoring", teksTimeFormat);
+                        userInputMap.put("TanggalDropdown", teksKosong);
+                        userInputMap.put("TanggalTeraUlangAwal", tanggalTeraAwal);
+                        userInputMap.put("Satuan", satuan);
+                        userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
+                        userInputMap.put("Quantity", jumlah);
+
+                        dbase.child(teksKosong).child(dataID).updateChildren(userInputMap)
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(EditData.this, "Edit Tera Ulang berhasil", Toast.LENGTH_LONG).show();
+                                        setDefault();
+                                    }
+                                    else{
+                                        Toast.makeText(EditData.this, "Jaringan bermasalah", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
     @SuppressLint("SetTextI18n")

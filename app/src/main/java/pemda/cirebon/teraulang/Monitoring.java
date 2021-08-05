@@ -1,59 +1,74 @@
 package pemda.cirebon.teraulang;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.CalendarView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.github.sundeepk.compactcalendarview.domain.Event;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.skyhope.eventcalenderlibrary.CalenderEvent;
+import com.skyhope.eventcalenderlibrary.model.Event;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.ArrayList;
 
+import pemda.cirebon.teraulang.Adapter.AdapterMonitoring;
 import pemda.cirebon.teraulang.Model.CalenderNotes;
 
 
 public class Monitoring extends AppCompatActivity {
 
-    ActionBar actionBar;
-    CompactCalendarView compactCalendarView;
-    TextView testing;
-    @SuppressLint("SimpleDateFormat")
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM- yyyy");
+    CalenderEvent calenderEvent;
+    ArrayList<CalenderNotes> notesArrayList;
+    AdapterMonitoring adapterMonitoring;
+    RecyclerView rcTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monitoring);
 
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle(null);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
-        testing = findViewById(R.id.test);
-        compactCalendarView = findViewById(R.id.compactcalendar_view);
-        compactCalendarView.setUseThreeLetterAbbreviation(true);
+        calenderEvent = findViewById(R.id.calenderEvent);
+        rcTable = findViewById(R.id.tabelDetail);
+        rcTable.setHasFixedSize(true);
+        rcTable.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        notesArrayList = new ArrayList<>();
+        adapterMonitoring = new AdapterMonitoring(getApplicationContext(), notesArrayList);
+        rcTable.setAdapter(adapterMonitoring);
+
+        /*calenderEvent.initCalderItemClickCallback(new CalenderDayClickListener() {
+            @Override
+            public void onGetDay(DayContainerModel dayContainerModel) {
+                Event event = new Event(dayContainerModel.getTimeInMillisecond(), "Tes");
+                calenderEvent.removeEvent(event);
+            }
+        });*/
+
+        /*Fungsi delete mark*/
+
+        /*calenderEvent.initCalderItemClickCallback(new CalenderDayClickListener() {
+            @Override
+            public void onGetDay(DayContainerModel dayContainerModel) {
+                Event event = new Event(dayContainerModel.getTimeInMillisecond(), "Tes");
+                calenderEvent.removeEvent(event);
+            }
+        });*/
+
+        /*fungsi tambah mark*/
 
         DatabaseReference dbase;
         dbase = FirebaseDatabase.getInstance().getReference();
@@ -63,26 +78,34 @@ public class Monitoring extends AppCompatActivity {
                 if (snapshot.hasChildren()){
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                         CalenderNotes calenderNotes = dataSnapshot.getValue(CalenderNotes.class);
+                        Event event = new Event(calenderNotes.getUnixTimestamp(), "Event", Color.GREEN);
+                        calenderEvent.addEvent(event);
 
-                        Event ev1 = new Event(Color.BLUE, calenderNotes.getUnixTimestamp(), "Testing");
-                        compactCalendarView.addEvent(ev1);
+                        calenderEvent.initCalderItemClickCallback(dayContainerModel -> {
+                            notesArrayList.clear();
+                            String tanggal = dayContainerModel.getDate();
+                            if (dayContainerModel.isHaveEvent()){
+                                dayContainerModel.setEvent(event);
+                                dayContainerModel.setHaveEvent(true);
+                                dbase.child("Monitoring").child(tanggal).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                        if (snapshot.hasChildren()){
+                                            for (DataSnapshot dataSnapshot1 : snapshot.getChildren()){
+                                                CalenderNotes calenderNotes1 = dataSnapshot1.getValue(CalenderNotes.class);
+                                                notesArrayList.add(calenderNotes1);
+                                            }
+                                            adapterMonitoring.notifyDataSetChanged();
+                                        }
+                                    }
 
-                        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
-                            @Override
-                            public void onDayClick(Date dateClicked) {
-                                Context context = getApplicationContext();
+                                    @Override
+                                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
-                                if (dateClicked.toString().equals(calenderNotes.getTanggalMonitoring())){
-                                    Toast.makeText(context, "Testing Apps", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onMonthScroll(Date firstDayOfNewMonth) {
-                                actionBar.setTitle(dateFormat.format(firstDayOfNewMonth));
+                                    }
+                                });
                             }
                         });
-
                     }
                 }
             }
@@ -93,6 +116,7 @@ public class Monitoring extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this, Dashboard.class);

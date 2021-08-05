@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,31 +28,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.type.DateTime;
 import com.whygraphics.multilineradiogroup.MultiLineRadioGroup;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 
 public class RekamData extends AppCompatActivity {
 
     TextInputEditText namaPemilik, noHp, kapasitas, anakTimbangan, biaya, quantity;
     String saveCurrentDate, saveCurrentTime;
-    TextView teraUlangAwal, teraUlangBrkt, emptyText, emptyBulan, emptyTimeMillis, emptyTimeFormat;
+    TextView teraUlangAwal, teraUlangBrkt, emptyText, emptyBulan, emptyTimeMillis, emptyTimeFormat, emptyTimeMili;
     DatePickerDialog datePickerDialog;
     SimpleDateFormat simpleDateFormat, simpleDateFormat2, simpleDateFormat3, simpleDateFormat4;
     ArrayList<String> arrayList_parent;
@@ -77,7 +71,7 @@ public class RekamData extends AppCompatActivity {
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         simpleDateFormat2 =  new SimpleDateFormat("yyyy");
         simpleDateFormat3 =  new SimpleDateFormat("MMM");
-        simpleDateFormat4 = new SimpleDateFormat("EEE MMM dd HH:mm:ss", Locale.ENGLISH);
+        simpleDateFormat4 = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH);
 
         multiLineRadioGroup = findViewById(R.id.main_activity_multi_line_radio_group);
         namaPemilik = findViewById(R.id.NamaPemilik);
@@ -94,6 +88,7 @@ public class RekamData extends AppCompatActivity {
         emptyBulan = findViewById(R.id.invisble2);
         emptyTimeMillis = findViewById(R.id.invisble3);
         emptyTimeFormat = findViewById(R.id.invisble4);
+        emptyTimeMili = findViewById(R.id.invisble5);
         backButton = findViewById(R.id.backbutton);
         quantity = findViewById(R.id.Quantity);
 
@@ -274,9 +269,13 @@ public class RekamData extends AppCompatActivity {
             newDate.set(Calendar.MINUTE, 0);
             newDate.set(Calendar.SECOND, 0);
             emptyTimeFormat.setText(simpleDateFormat4.format(newDate.getTime()));
-            Long timeStamp = newDate.getTimeInMillis();
-            String ts = timeStamp.toString();
+            long timeStamp = newDate.getTimeInMillis();
+            String ts = Long.toString(timeStamp);
             emptyTimeMillis.setText(ts);
+
+            long timestamp2 = newDate.getTimeInMillis() /1000;
+            String ts2 = Long.toString(timestamp2);
+            emptyTimeMili.setText(ts2);
 
             if(Timbangan.matches("Timbangan Meja|Timbangan Sentisimal|Timbangan Pegas|Timbangan Elektronik|" +
                     "Timbangan Dacin Logam|Timbangan Jembatan|Timbangan Bobot Ingsut|Neraca Emas/Obat|" +
@@ -322,7 +321,9 @@ public class RekamData extends AppCompatActivity {
         String teksKosong = emptyText.getText().toString();
         String saveBulan = emptyBulan.getText().toString();
         String time = emptyTimeMillis.getText().toString();
+        String time2 = emptyTimeMili.getText().toString();
         long teksTimeMilis = Long.parseLong(time);
+        long teksTimeMilis2 = Long.parseLong(time2);
         String teksTimeFormat = emptyTimeFormat.getText().toString();
         String satuan = multiLineRadioGroup.getCheckedRadioButtonText().toString();
         String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
@@ -377,16 +378,42 @@ public class RekamData extends AppCompatActivity {
             /*Monitoring*/
 
             DatabaseReference dbase4 = FirebaseDatabase.getInstance().getReference().child("Monitoring");
-            String id  = dbase4.push().getKey();
+            String id = dbase4.push().getKey();
             dbase4.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                     if (!snapshot.child(id).exists()){
                         HashMap<String, Object> userInputMap = new HashMap<>();
                         userInputMap.put("Nama", namaInput);
+                        userInputMap.put("Pid", tanggalID);
+                        userInputMap.put("NoHp", noHpInput);
+                        userInputMap.put("Alamat", alamatInput);
+                        userInputMap.put("Quantity", jumlah);
+                        userInputMap.put("JenisTimbangan", jenisTimbanganInput);
+                        userInputMap.put("Kapasitas", kapasitasInput);
+                        userInputMap.put("AnakTimbangan", anakTimbanganInput);
                         userInputMap.put("UnixTimestamp", teksTimeMilis);
                         userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
-                        userInputMap.put("TanggalMonitoring", teksTimeFormat + " GMT+07:00 " + teksKosong);
+                        userInputMap.put("TanggalMonitoring", teksTimeFormat);
+
+                        dbase4.child(teksTimeFormat).child(id).updateChildren(userInputMap);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
+
+            dbase4.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    if (!snapshot.child(id).exists()){
+                        HashMap<String, Object> userInputMap = new HashMap<>();
+                        userInputMap.put("Pid", tanggalID);
+                        userInputMap.put("UnixTimestamp", teksTimeMilis);
+                        userInputMap.put("TanggalMonitoring", teksTimeFormat);
 
                         dbase4.child(id).updateChildren(userInputMap);
                     }

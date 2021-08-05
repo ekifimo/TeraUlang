@@ -102,4 +102,13 @@
     <string name="next">Next</string>
     <string name="quantity">Quantity</string>
     <string name="testing">Testing</string>
+    <string name="tera_ulang_kedua">Nama Pemilik</string>
+    <string name="tanggaltera">03-08-2021</string>
+    <string name="tera_ulang">Tera Ulang</string>
+    <string name="alamat_pemilik">Alamat Pemilik</string>
+    <string name="no_hp_pemilik">No Hp Pemilik</string>
+    <string name="jenis_timbangan_pemilik">Jenis Timbangan Pemilik</string>
+    <string name="quantity_timbangan">Quantity</string>
+    <string name="anak_timbangan_pemilik">Anak Timbangan</string>
+    <string name="test">:</string>
 </resources>
