@@ -3,7 +3,6 @@ package pemda.cirebon.teraulang;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,6 +60,53 @@ public class Monitoring extends AppCompatActivity {
 
         /*Fungsi delete mark*/
 
+            DatabaseReference dbase;
+            dbase = FirebaseDatabase.getInstance().getReference();
+            dbase.child("Monitoring").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                    if (snapshot.hasChildren()){
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                            CalenderNotes calenderNotes = dataSnapshot.getValue(CalenderNotes.class);
+                            Event event = new Event(calenderNotes.getUnixTimestamp(), "Event", Color.GREEN);
+                            calenderEvent.addEvent(event);
+
+                            calenderEvent.initCalderItemClickCallback(dayContainerModel -> {
+                                notesArrayList.clear();
+                                String tanggal = dayContainerModel.getDate();
+                                if (dayContainerModel.isHaveEvent()){
+                                    dayContainerModel.setEvent(event);
+                                    dayContainerModel.setHaveEvent(true);
+                                    dbase.child("Monitoring").child(tanggal).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                            if (snapshot.hasChildren()){
+                                                for (DataSnapshot dataSnapshot1 : snapshot.getChildren()){
+                                                    CalenderNotes calenderNotes1 = dataSnapshot1.getValue(CalenderNotes.class);
+                                                    notesArrayList.add(calenderNotes1);
+                                                }
+                                                adapterMonitoring.notifyDataSetChanged();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
+        }
+
         /*calenderEvent.initCalderItemClickCallback(new CalenderDayClickListener() {
             @Override
             public void onGetDay(DayContainerModel dayContainerModel) {
@@ -71,7 +117,7 @@ public class Monitoring extends AppCompatActivity {
 
         /*fungsi tambah mark*/
 
-        DatabaseReference dbase;
+        /*DatabaseReference dbase;
         dbase = FirebaseDatabase.getInstance().getReference();
         dbase.child("Monitoring").addValueEventListener(new ValueEventListener() {
             @Override
@@ -116,8 +162,7 @@ public class Monitoring extends AppCompatActivity {
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
             }
-        });
-    }
+        });*/
 
     @Override
     public void onBackPressed() {

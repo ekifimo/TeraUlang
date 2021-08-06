@@ -269,10 +269,6 @@ public class RekamData extends AppCompatActivity {
             String ts = Long.toString(timeStamp);
             emptyTimeMillis.setText(ts);*/
 
-            /*long timestamp2 = newDate.getTimeInMillis() /1000;
-            String ts2 = Long.toString(timestamp2);
-            emptyTimeMili.setText(ts2);*/
-
             if(Timbangan.matches("Timbangan Meja|Timbangan Sentisimal|Timbangan Pegas|Timbangan Elektronik|" +
                     "Timbangan Dacin Logam|Timbangan Jembatan|Timbangan Bobot Ingsut|Neraca Emas/Obat|" +
                     "PU BBM|Lain-Lain")){

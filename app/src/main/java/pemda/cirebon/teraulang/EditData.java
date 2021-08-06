@@ -266,29 +266,42 @@ public class EditData extends AppCompatActivity {
             teraUlangAwal.setText(simpleDateFormat.format(newDate.getTime()));
             emptyText.setText(simpleDateFormat2.format(newDate.getTime()));
             emptyBulan.setText(simpleDateFormat3.format(newDate.getTime()));
-            newDate.set(Calendar.HOUR_OF_DAY, 0);
-            newDate.set(Calendar.MINUTE, 0);
-            newDate.set(Calendar.SECOND, 0);
-            emptyTimeFormat.setText(simpleDateFormat4.format(newDate.getTime()));
-            long timeStamp = newDate.getTimeInMillis();
+            /*long timeStamp = newDate.getTimeInMillis();
             String ts = Long.toString(timeStamp);
-            emptyTimeMillis.setText(ts);
-
-            long timestamp2 = newDate.getTimeInMillis() /1000;
-            String ts2 = Long.toString(timestamp2);
-            emptyTimeMili.setText(ts2);
+            emptyTimeMillis.setText(ts);*/
 
             if(Timbangan.matches("Timbangan Meja|Timbangan Sentisimal|Timbangan Pegas|Timbangan Elektronik|" +
                     "Timbangan Dacin Logam|Timbangan Jembatan|Timbangan Bobot Ingsut|Neraca Emas/Obat|" +
                     "PU BBM|Lain-Lain")){
                 newDate.add(Calendar.YEAR, 1);
                 teraUlangBrkt.setText(simpleDateFormat.format(newDate.getTime()));
+                long timeStamp = newDate.getTimeInMillis();
+                String ts = Long.toString(timeStamp);
+                emptyTimeMillis.setText(ts);
+                newDate.set(Calendar.HOUR_OF_DAY, 0);
+                newDate.set(Calendar.MINUTE, 0);
+                newDate.set(Calendar.SECOND, 0);
+                emptyTimeFormat.setText(simpleDateFormat4.format(newDate.getTime()));
             }else if(Timbangan.equals("Meter Air")) {
                 newDate.add(Calendar.YEAR, 5);
                 teraUlangBrkt.setText(simpleDateFormat.format(newDate.getTime()));
+                long timeStamp = newDate.getTimeInMillis();
+                String ts = Long.toString(timeStamp);
+                emptyTimeMillis.setText(ts);
+                newDate.set(Calendar.HOUR_OF_DAY, 0);
+                newDate.set(Calendar.MINUTE, 0);
+                newDate.set(Calendar.SECOND, 0);
+                emptyTimeFormat.setText(simpleDateFormat4.format(newDate.getTime()));
             }else if(Timbangan.equals("Meter Gas")) {
                 newDate.add(Calendar.YEAR, 10);
                 teraUlangBrkt.setText(simpleDateFormat.format(newDate.getTime()));
+                long timeStamp = newDate.getTimeInMillis();
+                String ts = Long.toString(timeStamp);
+                emptyTimeMillis.setText(ts);
+                newDate.set(Calendar.HOUR_OF_DAY, 0);
+                newDate.set(Calendar.MINUTE, 0);
+                newDate.set(Calendar.SECOND, 0);
+                emptyTimeFormat.setText(simpleDateFormat4.format(newDate.getTime()));
             }
         },calender.get(Calendar.YEAR), calender.get(Calendar.MONTH), calender.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
@@ -296,7 +309,7 @@ public class EditData extends AppCompatActivity {
 
     private void Input(String dataID) {
 
-        /*String tanggalID;
+        String tanggalID;
 
         Calendar calendar = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat currentDate = new SimpleDateFormat("yyyy-MMM-dd ");
@@ -305,7 +318,7 @@ public class EditData extends AppCompatActivity {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
         saveCurrentTime = currentTime.format(calendar.getTime());
 
-        tanggalID = saveCurrentDate + saveCurrentTime;*/
+        tanggalID = saveCurrentDate + saveCurrentTime;
 
         String namaInput = namaPemilik.getEditableText().toString();
         String noHpInput = noHp.getEditableText().toString();
@@ -321,9 +334,7 @@ public class EditData extends AppCompatActivity {
         String teksKosong = emptyText.getText().toString();
         String saveBulan = emptyBulan.getText().toString();
         String time = emptyTimeMillis.getText().toString();
-        String time2 = emptyTimeMili.getText().toString();
         long teksTimeMilis = Long.parseLong(time);
-        long teksTimeMilis2 = Long.parseLong(time2);
         String teksTimeFormat = emptyTimeFormat.getText().toString();
         String satuan = multiLineRadioGroup.getCheckedRadioButtonText().toString();
         String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
@@ -385,7 +396,7 @@ public class EditData extends AppCompatActivity {
                     if (!snapshot.child(id).exists()){
                         HashMap<String, Object> userInputMap = new HashMap<>();
                         userInputMap.put("Nama", namaInput);
-                        /*userInputMap.put("Pid", tanggalID);*/
+                        userInputMap.put("Pid", tanggalID);
                         userInputMap.put("NoHp", noHpInput);
                         userInputMap.put("Alamat", alamatInput);
                         userInputMap.put("Quantity", jumlah);
@@ -411,7 +422,7 @@ public class EditData extends AppCompatActivity {
                 public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                     if (!snapshot.child(id).exists()){
                         HashMap<String, Object> userInputMap = new HashMap<>();
-                        /*userInputMap.put("Pid", tanggalID);*/
+                        userInputMap.put("Pid", tanggalID);
                         userInputMap.put("UnixTimestamp", teksTimeMilis);
                         userInputMap.put("TanggalMonitoring", teksTimeFormat);
 
