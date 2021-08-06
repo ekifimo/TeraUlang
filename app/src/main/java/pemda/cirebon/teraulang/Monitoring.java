@@ -3,6 +3,7 @@ package pemda.cirebon.teraulang;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -84,6 +85,7 @@ public class Monitoring extends AppCompatActivity {
                         calenderEvent.initCalderItemClickCallback(dayContainerModel -> {
                             notesArrayList.clear();
                             String tanggal = dayContainerModel.getDate();
+                            Toast.makeText(Monitoring.this, "" + tanggal, Toast.LENGTH_SHORT).show();
                             if (dayContainerModel.isHaveEvent()){
                                 dayContainerModel.setEvent(event);
                                 dayContainerModel.setHaveEvent(true);
