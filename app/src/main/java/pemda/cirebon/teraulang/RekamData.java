@@ -70,7 +70,7 @@ public class RekamData extends AppCompatActivity {
 
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         simpleDateFormat2 =  new SimpleDateFormat("yyyy");
-        simpleDateFormat3 =  new SimpleDateFormat("MMM");
+        simpleDateFormat3 =  new SimpleDateFormat("MM MMM");
         simpleDateFormat4 = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH);
 
         multiLineRadioGroup = findViewById(R.id.main_activity_multi_line_radio_group);

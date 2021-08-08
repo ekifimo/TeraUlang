@@ -545,7 +545,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/DateButton"
                     android:text="@string/empty"
-                    android:textColor="#00FFFFFF"
+                    android:textColor="#ffFFFFFF"
                     android:layout_toRightOf="@+id/DateButton" />
                 <TextView
                     android:id="@+id/invisble3"

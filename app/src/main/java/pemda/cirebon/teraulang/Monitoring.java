@@ -50,12 +50,9 @@ public class Monitoring extends AppCompatActivity {
         adapterMonitoring = new AdapterMonitoring(getApplicationContext(), notesArrayList);
         rcTable.setAdapter(adapterMonitoring);
 
-        /*calenderEvent.initCalderItemClickCallback(new CalenderDayClickListener() {
-            @Override
-            public void onGetDay(DayContainerModel dayContainerModel) {
-                Event event = new Event(dayContainerModel.getTimeInMillisecond(), "Tes");
-                calenderEvent.removeEvent(event);
-            }
+        /*calenderEvent.initCalderItemClickCallback(dayContainerModel -> {
+            Event event = new Event(dayContainerModel.getTimeInMillisecond(), "Event");
+            calenderEvent.removeEvent(event);
         });*/
 
         /*Fungsi delete mark*/
@@ -107,62 +104,7 @@ public class Monitoring extends AppCompatActivity {
             });
         }
 
-        /*calenderEvent.initCalderItemClickCallback(new CalenderDayClickListener() {
-            @Override
-            public void onGetDay(DayContainerModel dayContainerModel) {
-                Event event = new Event(dayContainerModel.getTimeInMillisecond(), "Tes");
-                calenderEvent.removeEvent(event);
-            }
-        });*/
-
         /*fungsi tambah mark*/
-
-        /*DatabaseReference dbase;
-        dbase = FirebaseDatabase.getInstance().getReference();
-        dbase.child("Monitoring").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if (snapshot.hasChildren()){
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        CalenderNotes calenderNotes = dataSnapshot.getValue(CalenderNotes.class);
-                        Event event = new Event(calenderNotes.getUnixTimestamp(), "Event", Color.GREEN);
-                        calenderEvent.addEvent(event);
-
-                        calenderEvent.initCalderItemClickCallback(dayContainerModel -> {
-                            notesArrayList.clear();
-                            String tanggal = dayContainerModel.getDate();
-                            Toast.makeText(Monitoring.this, "" + tanggal, Toast.LENGTH_SHORT).show();
-                            if (dayContainerModel.isHaveEvent()){
-                                dayContainerModel.setEvent(event);
-                                dayContainerModel.setHaveEvent(true);
-                                dbase.child("Monitoring").child(tanggal).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                                        if (snapshot.hasChildren()){
-                                            for (DataSnapshot dataSnapshot1 : snapshot.getChildren()){
-                                                CalenderNotes calenderNotes1 = dataSnapshot1.getValue(CalenderNotes.class);
-                                                notesArrayList.add(calenderNotes1);
-                                            }
-                                            adapterMonitoring.notifyDataSetChanged();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-                                    }
-                                });
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });*/
 
     @Override
     public void onBackPressed() {
