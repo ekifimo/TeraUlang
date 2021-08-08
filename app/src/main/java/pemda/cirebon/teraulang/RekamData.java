@@ -341,15 +341,12 @@ public class RekamData extends AppCompatActivity {
         String satuan = multiLineRadioGroup.getCheckedRadioButtonText().toString();
         String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
 
-        if (namaInput.isEmpty() | noHpInput.isEmpty() | alamatInput.isEmpty() | kecamatanInput.isEmpty() | kelurahanInput.isEmpty()
-                | jenisTimbanganInput.isEmpty() | kapasitasInput.isEmpty() | biayaInput.isEmpty() | jumlah.isEmpty()
+        if (namaInput.isEmpty() | alamatInput.isEmpty() | kecamatanInput.isEmpty() | kelurahanInput.isEmpty()
+                | jenisTimbanganInput.isEmpty() | biayaInput.isEmpty() | jumlah.isEmpty()
                 | tanggalTeraAwal.isEmpty() | tanggalTeraAkhir.isEmpty()){
             namaPemilik.setError("Masukkan Nama");
-            noHp.setError("Masukkan No Hp");
             atAlamat.setError("Masukkan Alamat");
             quantity.setError("Masukkan Quantity");
-            kapasitas.setError("Masukkan Kapasitas");
-            anakTimbangan.setError("Masukkan Anak Timbangan");
             biaya.setError("Masukkan Biaya");
         } else {
 
@@ -450,6 +447,7 @@ public class RekamData extends AppCompatActivity {
                         userInputMap.put("PId", tanggalID);
                         userInputMap.put("Nama", namaInput);
                         userInputMap.put("NoHp", noHpInput);
+                        userInputMap.put("Bulan", saveBulan);
                         userInputMap.put("Alamat", alamatInput);
                         userInputMap.put("Kecamatan", kecamatanInput);
                         userInputMap.put("Kelurahan", kelurahanInput);

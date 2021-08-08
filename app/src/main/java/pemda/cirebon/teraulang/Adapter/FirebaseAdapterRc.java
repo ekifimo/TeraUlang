@@ -12,18 +12,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import pemda.cirebon.teraulang.EditData;
 import pemda.cirebon.teraulang.Model.TeraData;
@@ -107,6 +111,39 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
                                 for (DataSnapshot deleteSnapshot : snapshot.getChildren()){
                                     deleteSnapshot.getRef().removeValue();
                                 }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                            }
+                        });
+
+                        DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teraData.getTanggalDropdown()).child(teraData.getBulan());
+                        dbase3.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                                dbase3.runTransaction(new Transaction.Handler() {
+                                    @NonNull
+                                    @NotNull
+                                    @Override
+                                    public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
+                                        HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                                        if (tempdata == null){
+                                            return Transaction.success(currentData);
+                                        }
+                                        long newCount = (Long) tempdata.get("Count") - 1;
+                                        tempdata.put("Count", newCount);
+                                        currentData.setValue(tempdata);
+                                        return Transaction.success(currentData);
+                                    }
+
+                                    @Override
+                                    public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
+
+                                    }
+                                });
                             }
 
                             @Override

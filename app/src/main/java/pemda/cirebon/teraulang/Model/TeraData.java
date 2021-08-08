@@ -4,7 +4,7 @@ public class TeraData {
 
     String Alamat, AnakTimbangan, Biaya, JenisTimbangan, Kapasitas, Kecamatan, Kelurahan,
         Nama, NoHp, TanggalTeraUlangAwal, TanggalTeraUlangBerikutnya, TanggalDropdown, Quantity, PId,
-            TanggalMonitoring;
+            TanggalMonitoring, Bulan;
 
     public TeraData(){
 
@@ -13,7 +13,7 @@ public class TeraData {
     public TeraData(String alamat, String anakTimbangan, String biaya, String jenisTimbangan,
                     String kapasitas, String kecamatan, String kelurahan, String nama, String noHp,
                     String tanggalTeraUlangAwal, String tanggalTeraUlangBerikutnya, String TanggalDropdown,
-                    String Quantity, String PId, String TanggalMonitoring) {
+                    String Quantity, String PId, String TanggalMonitoring, String Bulan) {
         Alamat = alamat;
         AnakTimbangan = anakTimbangan;
         Biaya = biaya;
@@ -25,6 +25,7 @@ public class TeraData {
         NoHp = noHp;
         TanggalTeraUlangAwal = tanggalTeraUlangAwal;
         TanggalTeraUlangBerikutnya = tanggalTeraUlangBerikutnya;
+        Bulan = Bulan;
         TanggalDropdown = TanggalDropdown;
         Quantity = Quantity;
         PId = PId;
@@ -149,5 +150,13 @@ public class TeraData {
 
     public void setTanggalMonitoring(String tanggalMonitoring) {
         TanggalMonitoring = tanggalMonitoring;
+    }
+
+    public String getBulan() {
+        return Bulan;
+    }
+
+    public void setBulan(String bulan) {
+        Bulan = bulan;
     }
 }
