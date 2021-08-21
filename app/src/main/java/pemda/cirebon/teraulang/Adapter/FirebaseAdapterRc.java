@@ -66,7 +66,7 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
         holder.tvTimbangan.setText(teraData.getJenisTimbangan());
         holder.tvQuantity.setText(teraData.getQuantity());
         holder.tvAnakTimbangan.setText(teraData.getAnakTimbangan());
-        holder.tvRetribusi.setText(teraData.getBiaya());
+        holder.tvRetribusi.setText(String.valueOf(teraData.getBiaya()));
 
         holder.btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(context, EditData.class);
@@ -133,8 +133,8 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
                                         if (tempdata == null){
                                             return Transaction.success(currentData);
                                         }
-                                        long newCount = (Long) tempdata.get("Count") - 1;
-                                        tempdata.put("Count", newCount);
+                                        long newCount = (Long) tempdata.get("BiayaRetribusi") - teraData.getBiaya();
+                                        tempdata.put("BiayaRetribusi", newCount);
                                         currentData.setValue(tempdata);
                                         return Transaction.success(currentData);
                                     }
@@ -148,6 +148,40 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
 
                             @Override
                             public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                            }
+                        });
+
+                        DatabaseReference dbase4 = FirebaseDatabase.getInstance().getReference().child("Grafik")
+                                .child("GrafikUttp").child(teraData.getTanggalDropdown()).child(teraData.getJenisTimbangan());
+
+                        dbase4.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                dbase4.runTransaction(new Transaction.Handler() {
+                                    @NonNull
+                                    @Override
+                                    public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                        HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                                        if (tempdata == null){
+                                            return Transaction.success(currentData);
+                                        }
+                                        long newCount = (Long) tempdata.get("Count") - 1;
+                                        tempdata.put("Count", newCount);
+                                        currentData.setValue(tempdata);
+                                        return Transaction.success(currentData);
+                                    }
+
+                                    @Override
+                                    public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
                             }
                         });

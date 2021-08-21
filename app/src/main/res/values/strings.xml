@@ -74,7 +74,7 @@
         <item>Timbangan Dacin Logam</item>
         <item>Timbangan Jembatan</item>
         <item>Timbangan Bobot Ingsut</item>
-        <item>Neraca Emas/Obat</item>
+        <item>Neraca Emas - Obat</item>
         <item>PU BBM</item>
         <item>Meter Air</item>
         <item>Meter Gas</item>
@@ -116,4 +116,6 @@
     <string name="quantity_timbangan">Quantity</string>
     <string name="anak_timbangan_pemilik">Anak Timbangan</string>
     <string name="test">:</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

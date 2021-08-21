@@ -2,21 +2,22 @@ package pemda.cirebon.teraulang.Model;
 
 public class TeraData {
 
-    String Alamat, AnakTimbangan, Biaya, JenisTimbangan, Kapasitas, Kecamatan, Kelurahan,
+    String Alamat, AnakTimbangan, JenisTimbangan, Kapasitas, Kecamatan, Kelurahan,
         Nama, NoHp, TanggalTeraUlangAwal, TanggalTeraUlangBerikutnya, TanggalDropdown, Quantity, PId,
             TanggalMonitoring, Bulan;
+
+    int Biaya;
 
     public TeraData(){
 
     }
 
-    public TeraData(String alamat, String anakTimbangan, String biaya, String jenisTimbangan,
+    public TeraData(String alamat, String anakTimbangan, String jenisTimbangan,
                     String kapasitas, String kecamatan, String kelurahan, String nama, String noHp,
                     String tanggalTeraUlangAwal, String tanggalTeraUlangBerikutnya, String TanggalDropdown,
-                    String Quantity, String PId, String TanggalMonitoring, String Bulan) {
+                    String Quantity, String PId, String TanggalMonitoring, String Bulan, int biaya) {
         Alamat = alamat;
         AnakTimbangan = anakTimbangan;
-        Biaya = biaya;
         JenisTimbangan = jenisTimbangan;
         Kapasitas = kapasitas;
         Kecamatan = kecamatan;
@@ -30,6 +31,8 @@ public class TeraData {
         Quantity = Quantity;
         PId = PId;
         TanggalMonitoring = TanggalMonitoring;
+        Biaya = biaya;
+
     }
 
     public String getAlamat() {
@@ -46,14 +49,6 @@ public class TeraData {
 
     public void setAnakTimbangan(String anakTimbangan) {
         AnakTimbangan = anakTimbangan;
-    }
-
-    public String getBiaya() {
-        return Biaya;
-    }
-
-    public void setBiaya(String biaya) {
-        Biaya = biaya;
     }
 
     public String getJenisTimbangan() {
@@ -158,5 +153,13 @@ public class TeraData {
 
     public void setBulan(String bulan) {
         Bulan = bulan;
+    }
+
+    public int getBiaya() {
+        return Biaya;
+    }
+
+    public void setBiaya(int biaya) {
+        Biaya = biaya;
     }
 }

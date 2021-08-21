@@ -33,26 +33,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import pemda.cirebon.teraulang.Model.PointGrafikRetribusi;
+import pemda.cirebon.teraulang.Model.PointGrafikUttp;
 import pemda.cirebon.teraulang.R;
 
-public class Grafik_Fragment extends Fragment {
+public class Grafik_Uttp extends Fragment {
 
     LineChart barChart;
     ArrayList<Entry> barEntryArrayList;
     ArrayList<String> labelsNames;
     /*ArrayList<DataPoint> dataPointArrayList = new ArrayList<>();*/
-    ArrayList<PointGrafikRetribusi> dataPointArrayList = new ArrayList<>();
+    ArrayList<PointGrafikUttp> dataPointArrayList = new ArrayList<>();
     Spinner thSpinner;
     String spinnerTahun;
 
-    public static Grafik_Fragment newInstance() {
-        return new Grafik_Fragment();
+    public static Grafik_Uttp newInstance() {
+        return new Grafik_Uttp();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
-        return inflater.inflate(R.layout.activity_grafik_fragment, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_grafik__uttp, container, false);
     }
 
     @Override
@@ -67,41 +73,38 @@ public class Grafik_Fragment extends Fragment {
         thSpinner.setAdapter(adapter2);
 
         final int[] iSelect = {thSpinner.getSelectedItemPosition()};
-            thSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (iSelect[0] == position){
+        thSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (iSelect[0] == position){
 
-                    } else {
-                        spinnerTahun = parent.getItemAtPosition(position).toString();
-                        retrieveData();
-                        dataPointArrayList.clear();
-                    }
+                } else {
+                    spinnerTahun = parent.getItemAtPosition(position).toString();
+                    retrieveData();
+                    dataPointArrayList.clear();
                 }
+            }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                }
-            });
+            }
+        });
     }
 
     private void retrieveData() {
         DatabaseReference dbase;
         dbase = FirebaseDatabase.getInstance().getReference("Grafik");
-        dbase.child(spinnerTahun).addValueEventListener(new ValueEventListener() {
+        dbase.child("GrafikUttp").child(spinnerTahun).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if (snapshot.hasChildren()){
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        PointGrafikRetribusi dataPoint = dataSnapshot.getValue(PointGrafikRetribusi.class);
-                        dataPointArrayList.add(new PointGrafikRetribusi(dataPoint.getBulan(), dataPoint.getBiayaRetribusi()));
+                        PointGrafikUttp dataPoint = dataSnapshot.getValue(PointGrafikUttp.class);
+                        dataPointArrayList.add(new PointGrafikUttp(dataPoint.getJenisUTTP(), dataPoint.getCount()));
                     }
                     showChart(dataPointArrayList);
-                } /*else {
-                    barChart.clear();
-                    barChart.invalidate();
-                }*/
+                }
             }
 
             @Override
@@ -111,13 +114,13 @@ public class Grafik_Fragment extends Fragment {
         });
     }
 
-    private void showChart(ArrayList<PointGrafikRetribusi> dataPointArrayList) {
+    private void showChart(ArrayList<PointGrafikUttp> dataPointArrayList) {
         barEntryArrayList = new ArrayList<>();
         labelsNames = new ArrayList<>();
 
         for (int i = 0; i < dataPointArrayList.size(); i++){
-            String month = dataPointArrayList.get(i).getBulan();
-            int count = dataPointArrayList.get(i).getBiayaRetribusi();
+            String month = dataPointArrayList.get(i).getJenisUTTP();
+            int count = dataPointArrayList.get(i).getCount();
             barEntryArrayList.add(new BarEntry(i,count));
             labelsNames.add(month);
         }
@@ -142,43 +145,4 @@ public class Grafik_Fragment extends Fragment {
         barChart.animateY(2000);
         barChart.invalidate();
     }
-
-    /*private void retrieveData() {
-        DatabaseReference dbase;
-        dbase = FirebaseDatabase.getInstance().getReference("Grafik");
-        dbase.child(spinnerTahun).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                ArrayList<BarEntry> dataVals = new ArrayList<>();
-
-                if (snapshot.hasChildren()){
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        DataPoint dataPoint = dataSnapshot.getValue(DataPoint.class);
-                        dataVals.add(new BarEntry(dataPoint.getBulan(), dataPoint.getCount()));
-                    }
-                    showChart(dataVals);
-                } else {
-                    barChart.clear();
-                    barChart.invalidate();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    private void showChart(ArrayList<BarEntry> dataVals) {
-        barDataSet = new BarDataSet(dataVals, "Data Grafik");
-        barDataSet.setValues(dataVals);
-        barDataSet.setLabel("Grafik Tera Ulang");
-        iBarDataSets.clear();
-        iBarDataSets.add(barDataSet);
-        barData = new BarData(iBarDataSets);
-        barChart.clear();
-        barChart.setData(barData);
-        barChart.invalidate();
-    }*/
 }

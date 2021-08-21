@@ -3,6 +3,7 @@ package pemda.cirebon.teraulang;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +32,7 @@ public class Monitoring extends AppCompatActivity {
     ArrayList<CalenderNotes> notesArrayList;
     AdapterMonitoring adapterMonitoring;
     RecyclerView rcTable;
+    ImageView backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,13 @@ public class Monitoring extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+
+        backButton = findViewById(R.id.backbutton);
+
+        backButton.setOnClickListener(v-> {
+            Intent intent = new Intent(this, Dashboard.class);
+            startActivity(intent);
+        });
 
         calenderEvent = findViewById(R.id.calenderEvent);
         rcTable = findViewById(R.id.tabelDetail);

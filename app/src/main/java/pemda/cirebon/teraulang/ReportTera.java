@@ -1,19 +1,20 @@
 package pemda.cirebon.teraulang;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
 
 import pemda.cirebon.teraulang.Adapter.TabFragment;
 import pemda.cirebon.teraulang.Fragment.Data_Fragment;
 import pemda.cirebon.teraulang.Fragment.Grafik_Fragment;
+import pemda.cirebon.teraulang.Fragment.Grafik_Uttp;
 
 public class ReportTera extends AppCompatActivity {
 
@@ -45,7 +46,8 @@ public class ReportTera extends AppCompatActivity {
 
         TabFragment adapter = new TabFragment(getSupportFragmentManager());
         adapter.addFragment(Data_Fragment.newInstance(), "Data Tera");
-        adapter.addFragment(Grafik_Fragment.newInstance(), "Grafik Tera");
+        adapter.addFragment(Grafik_Fragment.newInstance(), "Grafik Retribusi");
+        adapter.addFragment(Grafik_Uttp.newInstance(), "Grafik UTTP");
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
 
