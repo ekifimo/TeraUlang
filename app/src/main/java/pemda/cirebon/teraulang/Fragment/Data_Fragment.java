@@ -1,6 +1,7 @@
 package pemda.cirebon.teraulang.Fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -50,9 +51,12 @@ public class Data_Fragment extends Fragment {
     DatabaseReference dReference;
     FirebaseAdapterRc adapter;
     ArrayList<TeraData> tera;
+    /*ArrayList<String> teraDataList;*/
+    ArrayList<TeraData> teraDataList;
     Spinner thSpinner;
     String spinnerTahun;
     TextView exportBtn;
+    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download";
     private static final int PERMISSION_REQUEST_CODE = 100;
 
     public static Data_Fragment newInstance() {
@@ -68,6 +72,7 @@ public class Data_Fragment extends Fragment {
     @Override
     public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState){
         exportBtn = view.findViewById(R.id.judul);
+        teraDataList = new ArrayList<>();
 
         String[] plhnThn = getResources().getStringArray(R.array.PilihTahun);
         List<String> dftrThn = Arrays.asList(plhnThn);
@@ -91,6 +96,23 @@ public class Data_Fragment extends Fragment {
         });
 
         exportBtn.setOnClickListener(v -> {
+
+            /*TestingCSV();*/
+
+            /*dReference = FirebaseDatabase.getInstance().getReference("InputTera");
+            dReference.child(spinnerTahun).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    TeraData teraData = snapshot.getValue(TeraData.class);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });*/
+
             if (checkPermission())
             {
                 fetchingData();
@@ -134,6 +156,7 @@ public class Data_Fragment extends Fragment {
 
         dReference = FirebaseDatabase.getInstance().getReference("InputTera");
         dReference.child(spinnerTahun).orderByChild("TanggalTeraUlangAwal").addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot :snapshot.getChildren()){
@@ -153,17 +176,40 @@ public class Data_Fragment extends Fragment {
 
     private void fetchingData() {
 
-        String[] res_data = getResources().getStringArray(R.array.PilihTahun);
-        StringBuilder data = new StringBuilder();
-        data.append("Tanggal Tera Ulang,Nama,No. Hp,Alamat, Kecamatan, Kelurahan, Timbangan, Kapasitas, Retribusi");
-        for (int i=0; i<res_data.length; i++){
+        dReference = FirebaseDatabase.getInstance().getReference("InputTera");
+        dReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                TeraData teraData = snapshot.getValue(TeraData.class);
+                List<String> dataa = new ArrayList<>();
+                dataa.add(teraData.getTanggalTeraUlangAwal());
+                dataa.add(teraData.getNama());
+                dataa.add(teraData.getNoHp());
+                dataa.add(teraData.getAlamat());
+                dataa.add(teraData.getKecamatan());
+                dataa.add(teraData.getKelurahan());
+                dataa.add(teraData.getJenisTimbangan());
+                dataa.add(teraData.getQuantity());
+                dataa.add(String.valueOf(teraData.getBiaya()));
 
-            data.append("\n").append(res_data[0]).append(",").append(res_data[1]).append(",")
-                    .append(res_data[2]).append(",").append(res_data[3]).append(res_data[4]).append(",")
-                    .append(res_data[5]).append(",").append(res_data[6]).append(res_data[7]).append(",")
-                    .append(res_data[8]);
-        }
-        Createcsv(data);
+                String[] res_data = dataa.toArray(new String[0]);
+                StringBuilder data = new StringBuilder();
+                data.append("Tanggal Tera Ulang,Nama,No. Hp,Alamat,Kecamatan,Kelurahan,Jenis UTTP,Quantity,Retribusi");
+                for (int i=0; i < res_data.length; i++){
+
+                    data.append("\n").append(res_data[0]).append(",").append(res_data[1]).append(",")
+                            .append(res_data[2]).append(",").append(res_data[3]).append(res_data[4]).append(",")
+                            .append(res_data[5]).append(",").append(res_data[6]).append(res_data[7]).append(",")
+                            .append(res_data[8]);
+                }
+                Createcsv(data);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
@@ -177,7 +223,8 @@ public class Data_Fragment extends Fragment {
             out.close();
 
             Context context = getContext();
-            final File newFile = new File(Environment.getExternalStorageDirectory(),"SimpleCSV");
+            /*final File newFile = new File(Environment.getExternalStorageDirectory(), "Tera Ulang");*/
+            final File newFile = new File(Environment.getExternalStorageDirectory() + "/Download");
             if (!newFile.exists()){
                 newFile.mkdir();
             }

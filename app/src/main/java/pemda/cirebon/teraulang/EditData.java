@@ -239,7 +239,7 @@ public class EditData extends AppCompatActivity {
                     anakTimbangan.setText(teraData.getAnakTimbangan());
                     quantity.setText(teraData.getQuantity());
                     kapasitas.setText(teraData.getKapasitas());
-                    biaya.setText(teraData.getBiaya());
+                    biaya.setText(String.valueOf(teraData.getBiaya()));
                     teraUlangAwal.setText(teraData.getTanggalTeraUlangAwal());
                     teraUlangBrkt.setText(teraData.getTanggalTeraUlangBerikutnya());
                     emptyText.setText(teraData.getTanggalDropdown());
@@ -328,7 +328,7 @@ public class EditData extends AppCompatActivity {
         String jenisTimbanganInput = jtSpinner.getSelectedItem().toString();
         String kapasitasInput = kapasitas.getEditableText().toString();
         String anakTimbanganInput = anakTimbangan.getEditableText().toString();
-        String biayaInput = biaya.getEditableText().toString();
+        int biayaInput = Integer.parseInt(biaya.getEditableText().toString());
         String tanggalTeraAwal = teraUlangAwal.getText().toString();
         String tanggalTeraAkhir = teraUlangBrkt.getText().toString();
         String teksKosong = emptyText.getText().toString();
@@ -339,19 +339,49 @@ public class EditData extends AppCompatActivity {
         String satuan = multiLineRadioGroup.getCheckedRadioButtonText().toString();
         String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
 
-        if (namaInput.isEmpty() | noHpInput.isEmpty() | alamatInput.isEmpty() | kecamatanInput.isEmpty() | kelurahanInput.isEmpty()
-                | jenisTimbanganInput.isEmpty() | kapasitasInput.isEmpty() | biayaInput.isEmpty() | jumlah.isEmpty()
+        if (namaInput.isEmpty() | alamatInput.isEmpty() | kecamatanInput.isEmpty() | kelurahanInput.isEmpty()
+                | jenisTimbanganInput.isEmpty() | kapasitasInput.isEmpty() | biayaInput == 0 | jumlah.isEmpty()
                 | tanggalTeraAwal.isEmpty() | tanggalTeraAkhir.isEmpty()){
             namaPemilik.setError("Masukkan Nama");
-            noHp.setError("Masukkan No Hp");
             atAlamat.setError("Masukkan Alamat");
             quantity.setError("Masukkan Quantity");
-            kapasitas.setError("Masukkan Kapasitas");
-            anakTimbangan.setError("Masukkan Anak Timbangan");
             biaya.setError("Masukkan Biaya");
         } else {
 
-            /*Grafik*/
+            DatabaseReference dbase6 = FirebaseDatabase.getInstance().getReference().child("Grafik")
+                    .child("GrafikUttp").child(teksKosong).child(jenisTimbanganInput);
+
+            dbase6.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    dbase6.runTransaction(new Transaction.Handler() {
+                        @NonNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                            HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                            if (tempdata == null){
+                                return Transaction.success(currentData);
+                            }
+                            long newCount = (Long) tempdata.get("Count") + 1;
+                            tempdata.put("Count", newCount);
+                            currentData.setValue(tempdata);
+                            return Transaction.success(currentData);
+                        }
+
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            /*Grafik Retribusi*/
 
             DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teksKosong).child(saveBulan);
             dbase3.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -367,8 +397,8 @@ public class EditData extends AppCompatActivity {
                             if (tempdata == null){
                                 return Transaction.success(currentData);
                             }
-                            long newCount = (Long) tempdata.get("Count") + 1;
-                            tempdata.put("Count", newCount);
+                            long newCount = (Long) tempdata.get("BiayaRetribusi") + biayaInput;
+                            tempdata.put("BiayaRetribusi", newCount);
                             currentData.setValue(tempdata);
                             return Transaction.success(currentData);
                         }

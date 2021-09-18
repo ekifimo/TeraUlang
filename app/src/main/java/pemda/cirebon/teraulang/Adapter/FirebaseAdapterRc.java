@@ -51,10 +51,9 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
         return new myViewHolder(view);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
     @Override
     public void onBindViewHolder(@NonNull @NotNull FirebaseAdapterRc.myViewHolder holder, int position) {
-
 
         TeraData teraData = teraList.get(position);
         holder.tvTgl.setText(teraData.getTanggalTeraUlangAwal());
