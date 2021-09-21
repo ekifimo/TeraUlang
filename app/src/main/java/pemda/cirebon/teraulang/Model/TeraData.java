@@ -2,20 +2,16 @@ package pemda.cirebon.teraulang.Model;
 
 public class TeraData {
 
+    int Biaya;
     String Alamat, AnakTimbangan, JenisTimbangan, Kapasitas, Kecamatan, Kelurahan,
-        Nama, NoHp, TanggalTeraUlangAwal, TanggalTeraUlangBerikutnya, TanggalDropdown, Quantity, PId,
+            Nama, NoHp, TanggalTeraUlangAwal, TanggalTeraUlangBerikutnya, TanggalDropdown, Quantity, PId,
             TanggalMonitoring, Bulan;
 
-    int Biaya;
-
-    public TeraData(){
-
+    public TeraData() {
     }
 
-    public TeraData(String alamat, String anakTimbangan, String jenisTimbangan,
-                    String kapasitas, String kecamatan, String kelurahan, String nama, String noHp,
-                    String tanggalTeraUlangAwal, String tanggalTeraUlangBerikutnya, String TanggalDropdown,
-                    String Quantity, String PId, String TanggalMonitoring, String Bulan, int biaya) {
+    public TeraData(int biaya, String alamat, String anakTimbangan, String jenisTimbangan, String kapasitas, String kecamatan, String kelurahan, String nama, String noHp, String tanggalTeraUlangAwal, String tanggalTeraUlangBerikutnya, String tanggalDropdown, String quantity, String PId, String tanggalMonitoring, String bulan) {
+        Biaya = biaya;
         Alamat = alamat;
         AnakTimbangan = anakTimbangan;
         JenisTimbangan = jenisTimbangan;
@@ -26,13 +22,19 @@ public class TeraData {
         NoHp = noHp;
         TanggalTeraUlangAwal = tanggalTeraUlangAwal;
         TanggalTeraUlangBerikutnya = tanggalTeraUlangBerikutnya;
-        Bulan = Bulan;
-        TanggalDropdown = TanggalDropdown;
-        Quantity = Quantity;
-        PId = PId;
-        TanggalMonitoring = TanggalMonitoring;
-        Biaya = biaya;
+        TanggalDropdown = tanggalDropdown;
+        Quantity = quantity;
+        this.PId = PId;
+        TanggalMonitoring = tanggalMonitoring;
+        Bulan = bulan;
+    }
 
+    public int getBiaya() {
+        return Biaya;
+    }
+
+    public void setBiaya(int biaya) {
+        Biaya = biaya;
     }
 
     public String getAlamat() {
@@ -153,13 +155,5 @@ public class TeraData {
 
     public void setBulan(String bulan) {
         Bulan = bulan;
-    }
-
-    public int getBiaya() {
-        return Biaya;
-    }
-
-    public void setBiaya(int biaya) {
-        Biaya = biaya;
     }
 }

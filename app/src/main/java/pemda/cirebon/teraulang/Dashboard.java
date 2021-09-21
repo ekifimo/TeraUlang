@@ -29,7 +29,7 @@ public class Dashboard extends AppCompatActivity {
             monitoringBtn = findViewById(R.id.relativeLayout3);
             userName = findViewById(R.id.namapengguna);
 
-            userName.setText(Prevelante.currentUserOnline.getNama());
+//            userName.setText(Prevelante.currentUserOnline.getNama());
 
             teraBtn.setOnClickListener(v ->{
                 Intent intent = new Intent(Dashboard.this, ReportTera.class);

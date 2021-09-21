@@ -5,8 +5,12 @@ public class UserLogin {
     String NIP;
     String Password;
 
-    public UserLogin(){
+    public UserLogin() {}
 
+    public UserLogin(String nama, String NIP, String password) {
+        Nama = nama;
+        this.NIP = NIP;
+        Password = password;
     }
 
     public String getNama() {
@@ -30,12 +34,6 @@ public class UserLogin {
     }
 
     public void setPassword(String password) {
-        Password = password;
-    }
-
-    public UserLogin(String nama, String NIP, String password) {
-        Nama = nama;
-        this.NIP = NIP;
         Password = password;
     }
 }

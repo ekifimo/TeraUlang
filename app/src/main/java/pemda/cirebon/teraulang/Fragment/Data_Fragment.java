@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +113,6 @@ public class Data_Fragment extends Fragment {
 
                 }
             });*/
-
             if (checkPermission())
             {
                 fetchingData();
@@ -175,33 +175,38 @@ public class Data_Fragment extends Fragment {
     }
 
     private void fetchingData() {
-
         dReference = FirebaseDatabase.getInstance().getReference("InputTera");
         dReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                TeraData teraData = snapshot.getValue(TeraData.class);
-                List<String> dataa = new ArrayList<>();
-                dataa.add(teraData.getTanggalTeraUlangAwal());
-                dataa.add(teraData.getNama());
-                dataa.add(teraData.getNoHp());
-                dataa.add(teraData.getAlamat());
-                dataa.add(teraData.getKecamatan());
-                dataa.add(teraData.getKelurahan());
-                dataa.add(teraData.getJenisTimbangan());
-                dataa.add(teraData.getQuantity());
-                dataa.add(String.valueOf(teraData.getBiaya()));
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> listData = new ArrayList<>();
 
-                String[] res_data = dataa.toArray(new String[0]);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                        TeraData teraData = snapshot1.getValue(TeraData.class);
+                        listData.add(teraData.getTanggalTeraUlangAwal());
+                        listData.add(teraData.getNama());
+                        listData.add(teraData.getNoHp());
+                        listData.add(teraData.getAlamat());
+                        listData.add(teraData.getKecamatan());
+                        listData.add(teraData.getKelurahan());
+                        listData.add(teraData.getJenisTimbangan());
+                        listData.add(teraData.getQuantity());
+                        listData.add(String.valueOf(teraData.getBiaya()));
+                    }
+                }
+
+                String[] res_data = listData.toArray(new String[0]);
                 StringBuilder data = new StringBuilder();
-                data.append("Tanggal Tera Ulang,Nama,No. Hp,Alamat,Kecamatan,Kelurahan,Jenis UTTP,Quantity,Retribusi");
-                for (int i=0; i < res_data.length; i++){
+                data.append("Tanggal Tera Ulang, Nama, No. Hp, Alamat, Kecamatan, Kelurahan, Jenis UTTP, Quantity, Retribusi");
 
+                for (int i=0; i < res_data.length; i++){
                     data.append("\n").append(res_data[0]).append(",").append(res_data[1]).append(",")
                             .append(res_data[2]).append(",").append(res_data[3]).append(res_data[4]).append(",")
                             .append(res_data[5]).append(",").append(res_data[6]).append(res_data[7]).append(",")
                             .append(res_data[8]);
                 }
+
                 Createcsv(data);
             }
 
