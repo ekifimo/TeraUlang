@@ -64,14 +64,14 @@ public class Data_Fragment extends Fragment {
         return new Data_Fragment();
     }
 
-        @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_data_fragment, container, false);
 
     }
 
     @Override
-    public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         exportBtn = view.findViewById(R.id.judul);
         teraDataList = new ArrayList<>();
 
@@ -113,8 +113,7 @@ public class Data_Fragment extends Fragment {
 
                 }
             });*/
-            if (checkPermission())
-            {
+            if (checkPermission()) {
                 fetchingData();
             } else {
                 reqPermissions();
@@ -159,7 +158,7 @@ public class Data_Fragment extends Fragment {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot :snapshot.getChildren()){
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     TeraData teraData = dataSnapshot.getValue(TeraData.class);
                     tera.add(teraData);
                     exportBtn.setVisibility(View.VISIBLE);
@@ -175,38 +174,17 @@ public class Data_Fragment extends Fragment {
     }
 
     private void fetchingData() {
-        dReference = FirebaseDatabase.getInstance().getReference("InputTera");
+        dReference = FirebaseDatabase.getInstance().getReference("InputTera").child(spinnerTahun);
         dReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<String> listData = new ArrayList<>();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                        TeraData teraData = snapshot1.getValue(TeraData.class);
-                        listData.add(teraData.getTanggalTeraUlangAwal());
-                        listData.add(teraData.getNama());
-                        listData.add(teraData.getNoHp());
-                        listData.add(teraData.getAlamat());
-                        listData.add(teraData.getKecamatan());
-                        listData.add(teraData.getKelurahan());
-                        listData.add(teraData.getJenisTimbangan());
-                        listData.add(teraData.getQuantity());
-                        listData.add(String.valueOf(teraData.getBiaya()));
-                    }
-                }
-
-                String[] res_data = listData.toArray(new String[0]);
                 StringBuilder data = new StringBuilder();
                 data.append("Tanggal Tera Ulang, Nama, No. Hp, Alamat, Kecamatan, Kelurahan, Jenis UTTP, Quantity, Retribusi");
 
-                for (int i=0; i < res_data.length; i++){
-                    data.append("\n").append(res_data[0]).append(",").append(res_data[1]).append(",")
-                            .append(res_data[2]).append(",").append(res_data[3]).append(res_data[4]).append(",")
-                            .append(res_data[5]).append(",").append(res_data[6]).append(res_data[7]).append(",")
-                            .append(res_data[8]);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    TeraData teraData = snapshot.getValue(TeraData.class);
+                    data.append("\n").append(teraData.getTanggalTeraUlangAwal()).append(", ").append(teraData.getNama()).append(", ").append(teraData.getNoHp()).append(", ").append(teraData.getAlamat()).append(", ").append(teraData.getKecamatan()).append(", ").append(teraData.getKelurahan()).append(", ").append(teraData.getJenisTimbangan()).append(", ").append(teraData.getQuantity()).append(", ").append(String.valueOf(teraData.getBiaya()));
                 }
-
                 Createcsv(data);
             }
 
@@ -222,7 +200,7 @@ public class Data_Fragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         long time = calendar.getTimeInMillis();
 
-        try{
+        try {
             FileOutputStream out = requireContext().openFileOutput("CSV_Data_" + time + ".csv", Context.MODE_PRIVATE);
             out.write(data.toString().getBytes());
             out.close();
@@ -230,22 +208,22 @@ public class Data_Fragment extends Fragment {
             Context context = getContext();
             /*final File newFile = new File(Environment.getExternalStorageDirectory(), "Tera Ulang");*/
             final File newFile = new File(Environment.getExternalStorageDirectory() + "/Download");
-            if (!newFile.exists()){
+            if (!newFile.exists()) {
                 newFile.mkdir();
             }
 
             assert context != null;
-            File file = new File(context.getFilesDir(), "CSV_Data_"+time+".csv");
+            File file = new File(context.getFilesDir(), "CSV_Data_" + time + ".csv");
 
-            Uri path = FileProvider.getUriForFile(context, "pemda.cirebon.teraulang",file);
+            Uri path = FileProvider.getUriForFile(context, "pemda.cirebon.teraulang", file);
 
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/csv");
             intent.putExtra(Intent.EXTRA_SUBJECT, "Data");
             intent.putExtra(Intent.EXTRA_STREAM, path);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(Intent.createChooser(intent,"Excel Data"));
-        }catch (Exception e) {
+            startActivity(Intent.createChooser(intent, "Excel Data"));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -256,7 +234,7 @@ public class Data_Fragment extends Fragment {
     }
 
     private void reqPermissions() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Toast.makeText(getContext(), "Write External Storage permission allows us to save files. " +
                     "Please allow this permission in App Settings.", Toast.LENGTH_SHORT).show();
         } else {
