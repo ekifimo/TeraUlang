@@ -173,6 +173,8 @@ public class Data_Fragment extends Fragment {
         });
     }
 
+//    TESTING COBA DI COMMIT
+
     private void fetchingData() {
         dReference = FirebaseDatabase.getInstance().getReference("InputTera");
         dReference.addValueEventListener(new ValueEventListener() {
@@ -216,6 +218,29 @@ public class Data_Fragment extends Fragment {
         });
 
     }
+
+ /*   private void fetchingData() {
+        dReference = FirebaseDatabase.getInstance().getReference("InputTera").child(spinnerTahun);
+        dReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                StringBuilder data = new StringBuilder();
+                data.append("Tanggal Tera Ulang, Nama, No. Hp, Alamat, Kecamatan, Kelurahan, Jenis UTTP, Quantity, Retribusi");
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    TeraData teraData = snapshot.getValue(TeraData.class);
+                    data.append("\n").append(teraData.getTanggalTeraUlangAwal()).append(", ").append(teraData.getNama()).append(", ").append(teraData.getNoHp()).append(", ").append(teraData.getAlamat()).append(", ").append(teraData.getKecamatan()).append(", ").append(teraData.getKelurahan()).append(", ").append(teraData.getJenisTimbangan()).append(", ").append(teraData.getQuantity()).append(", ").append(String.valueOf(teraData.getBiaya()));
+                }
+                Createcsv(data);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }*/
 
     private void Createcsv(StringBuilder data) {
         Calendar calendar = Calendar.getInstance();

@@ -6,11 +6,16 @@ public class TeraData {
     String Alamat, AnakTimbangan, JenisTimbangan, Kapasitas, Kecamatan, Kelurahan,
             Nama, NoHp, TanggalTeraUlangAwal, TanggalTeraUlangBerikutnya, TanggalDropdown, Quantity, PId,
             TanggalMonitoring, Bulan;
+    long UnixTimestamp;
 
     public TeraData() {
     }
 
-    public TeraData(int biaya, String alamat, String anakTimbangan, String jenisTimbangan, String kapasitas, String kecamatan, String kelurahan, String nama, String noHp, String tanggalTeraUlangAwal, String tanggalTeraUlangBerikutnya, String tanggalDropdown, String quantity, String PId, String tanggalMonitoring, String bulan) {
+    public TeraData(int biaya, String alamat, String anakTimbangan, String jenisTimbangan,
+                    String kapasitas, String kecamatan, String kelurahan, String nama,
+                    String noHp, String tanggalTeraUlangAwal, String tanggalTeraUlangBerikutnya,
+                    String tanggalDropdown, String quantity, String PId, String tanggalMonitoring,
+                    String bulan, long unixTimestamp) {
         Biaya = biaya;
         Alamat = alamat;
         AnakTimbangan = anakTimbangan;
@@ -27,6 +32,7 @@ public class TeraData {
         this.PId = PId;
         TanggalMonitoring = tanggalMonitoring;
         Bulan = bulan;
+        UnixTimestamp = unixTimestamp;
     }
 
     public int getBiaya() {
@@ -155,5 +161,13 @@ public class TeraData {
 
     public void setBulan(String bulan) {
         Bulan = bulan;
+    }
+
+    public long getUnixTimestamp() {
+        return UnixTimestamp;
+    }
+
+    public void setUnixTimestamp(long unixTimestamp) {
+        UnixTimestamp = unixTimestamp;
     }
 }

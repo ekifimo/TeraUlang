@@ -55,6 +55,8 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
     @Override
     public void onBindViewHolder(@NonNull @NotNull FirebaseAdapterRc.myViewHolder holder, int position) {
 
+        /*int sum = 0;*/
+
         TeraData teraData = teraList.get(position);
         holder.tvTgl.setText(teraData.getTanggalTeraUlangAwal());
         holder.tvNama.setText(teraData.getNama());
@@ -67,11 +69,82 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
         holder.tvAnakTimbangan.setText(teraData.getAnakTimbangan());
         holder.tvRetribusi.setText(String.valueOf(teraData.getBiaya()));
 
+        /*int total = teraData.getBiaya();
+        sum += total;
+        holder.tvTotal.setText(String.valueOf(sum));*/
+
         holder.btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(context, EditData.class);
             intent.putExtra("pid", teraData.getPId());
             intent.putExtra("tahun", teraData.getTanggalDropdown());
             context.startActivity(intent);
+
+            DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teraData.getTanggalDropdown()).child(teraData.getBulan());
+            dbase3.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                    dbase3.runTransaction(new Transaction.Handler() {
+                        @NonNull
+                        @NotNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
+                            HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                            if (tempdata == null){
+                                return Transaction.success(currentData);
+                            }
+                            long newCount = (Long) tempdata.get("BiayaRetribusi") - teraData.getBiaya();
+                            tempdata.put("BiayaRetribusi", newCount);
+                            currentData.setValue(tempdata);
+                            return Transaction.success(currentData);
+                        }
+
+                        @Override
+                        public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                }
+            });
+
+            DatabaseReference dbase4 = FirebaseDatabase.getInstance().getReference().child("Grafik")
+                    .child("GrafikUttp").child(teraData.getTanggalDropdown()).child(teraData.getJenisTimbangan());
+
+            dbase4.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    dbase4.runTransaction(new Transaction.Handler() {
+                        @NonNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                            HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                            if (tempdata == null){
+                                return Transaction.success(currentData);
+                            }
+                            long newCount = (Long) tempdata.get("Count") - 1;
+                            tempdata.put("Count", newCount);
+                            currentData.setValue(tempdata);
+                            return Transaction.success(currentData);
+                        }
+
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         });
 
         holder.btnDelet.setOnClickListener(v -> {
@@ -201,7 +274,7 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
     public static class myViewHolder extends RecyclerView.ViewHolder{
 
         TextView tvTgl, tvNama, tvNoHp, tvAlamat, tvKecamatan, tvKelurahan, tvTimbangan, tvAnakTimbangan,
-            tvRetribusi, tvQuantity;
+            tvRetribusi, tvQuantity, tvTotal;
         ImageButton btnEdit, btnDelet;
 
         public myViewHolder(@NonNull @NotNull View itemView) {
@@ -219,6 +292,7 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
             tvRetribusi = itemView.findViewById(R.id.retribusi_tv);
             btnEdit = itemView.findViewById(R.id.EditItem);
             btnDelet = itemView.findViewById(R.id.DeleteItem);
+            /*tvTotal = itemView.findViewById(R.id.total);*/
         }
 
     }

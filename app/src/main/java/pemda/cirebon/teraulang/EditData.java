@@ -243,6 +243,9 @@ public class EditData extends AppCompatActivity {
                     teraUlangAwal.setText(teraData.getTanggalTeraUlangAwal());
                     teraUlangBrkt.setText(teraData.getTanggalTeraUlangBerikutnya());
                     emptyText.setText(teraData.getTanggalDropdown());
+                    emptyBulan.setText(teraData.getBulan());
+                    emptyTimeFormat.setText(teraData.getTanggalMonitoring());
+                    emptyTimeMillis.setText(String.valueOf(teraData.getUnixTimestamp()));
                 }
             }
 
@@ -487,6 +490,7 @@ public class EditData extends AppCompatActivity {
                         userInputMap.put("Biaya", biayaInput);
                         userInputMap.put("TanggalMonitoring", teksTimeFormat);
                         userInputMap.put("TanggalDropdown", teksKosong);
+                        userInputMap.put("UnixTimestamp", teksTimeMilis);
                         userInputMap.put("TanggalTeraUlangAwal", tanggalTeraAwal);
                         userInputMap.put("Satuan", satuan);
                         userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);

@@ -492,6 +492,7 @@ public class RekamData extends AppCompatActivity {
                         userInputMap.put("Biaya", biayaInput);
                         userInputMap.put("TanggalMonitoring", teksTimeFormat);
                         userInputMap.put("TanggalDropdown", teksKosong);
+                        userInputMap.put("UnixTimestamp", teksTimeMilis);
                         userInputMap.put("TanggalTeraUlangAwal", tanggalTeraAwal);
                         userInputMap.put("Satuan", satuan);
                         userInputMap.put("TanggalTeraUlangBerikutnya", tanggalTeraAkhir);
