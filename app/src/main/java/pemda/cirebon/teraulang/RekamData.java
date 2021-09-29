@@ -270,7 +270,7 @@ public class RekamData extends AppCompatActivity {
             emptyTimeMillis.setText(ts);*/
 
             if(Timbangan.matches("Timbangan Meja|Timbangan Sentisimal|Timbangan Pegas|Timbangan Elektronik|" +
-                    "Timbangan Dacin Logam|Timbangan Jembatan|Timbangan Bobot Ingsut|Neraca Emas/Obat|" +
+                    "Timbangan Dacin Logam|Timbangan Jembatan|Timbangan Bobot Ingsut|Neraca Emas - Obat|" +
                     "PU BBM|Lain-Lain")){
                 newDate.add(Calendar.YEAR, 1);
                 teraUlangBrkt.setText(simpleDateFormat.format(newDate.getTime()));
