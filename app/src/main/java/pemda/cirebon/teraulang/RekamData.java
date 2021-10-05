@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -39,7 +40,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class RekamData extends AppCompatActivity {
 
@@ -57,6 +57,7 @@ public class RekamData extends AppCompatActivity {
     ImageButton imageButton, backButton;
     Spinner jtSpinner, kecamatanSpinner, kelurahanSpinner;
     MultiLineRadioGroup multiLineRadioGroup;
+    String errorMessage = "Pilihan tidak boleh kosong";
 
     @SuppressLint({"WrongViewCast", "CutPasteId", "SimpleDateFormat"})
     @Override
@@ -97,18 +98,33 @@ public class RekamData extends AppCompatActivity {
         imageButton = findViewById(R.id.DateButton);
 
         imageButton.setOnClickListener(v -> {
-            v = this.getCurrentFocus();
-            if (v != null){
+            if (jtSpinner.getSelectedItem().toString().equals("Pilih Jenis UTTP")){
+                setErrorJenisTimbangan(errorMessage);
+            } else {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            }
-            if (jtSpinner.getSelectedItem().equals("Pilih Jenis Timbangan")) {
-                Toast.makeText(this, "Masukkan Jenis Timbangan", Toast.LENGTH_LONG).show();
-
-            }
-            else
                 showdatedialog();
+            }
+
         });
+
+        submitBtn.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(namaPemilik.getText().toString())){
+                ValidasiNama(errorMessage);
+            } else if (TextUtils.isEmpty(atAlamat.getText().toString())){
+                ValidasiAlamat(errorMessage);
+            } else if (kecamatanSpinner.getSelectedItem().toString().equals("Pilih Kecamatan")){
+                ValidasiKecamatan(errorMessage);
+            } else if (TextUtils.isEmpty(quantity.getText().toString())){
+                ValidasiQuantity(errorMessage);
+            } else if (TextUtils.isEmpty(biaya.getText().toString())){
+                ValidasiBiaya(errorMessage);
+            }
+            else {
+                Input();
+            }
+        });
+
 
         int layoutItemId = android.R.layout.simple_dropdown_item_1line;
         String[] alamatt = getResources().getStringArray(R.array.Alamat);
@@ -212,21 +228,68 @@ public class RekamData extends AppCompatActivity {
             startActivity(intent);
         });
 
-        submitBtn.setOnClickListener(v -> {
-            if (namaPemilik.equals("")){
-                namaPemilik.setError("Masukkan Nama");
-                noHp.setError("Masukkan No Hp");
-                atAlamat.setError("Masukkan Alamat");
-                anakTimbangan.setError("Masukkan Anak Timbangan");
-                quantity.setError("Masukkan Quantity");
-                biaya.setError("Masukkan Biaya");
-            } else {
-                Input();
-            }
-        });
-
     }
 
+    private void ValidasiBiaya(String errorMessage) {
+        if (errorMessage != null){
+            biaya.setError("Masukkan Jumlah Biaya");
+        } else {
+            biaya.setError(null);
+        }
+    }
+
+    private void ValidasiQuantity(String errorMessage) {
+        if (errorMessage != null){
+            quantity.setError("Masukkan Quantitas");
+        } else {
+            quantity.setError(null);
+        }
+    }
+
+    private void ValidasiKecamatan(String errorMessage) {
+        View view = kecamatanSpinner.getSelectedView();
+
+        TextView tvListItem = (TextView) view;
+
+        if (errorMessage != null){
+            tvListItem.setError("Masukkan Kecamatan");
+        } else {
+            tvListItem.setError(null);
+        }
+    }
+
+    private void ValidasiAlamat(String errorMessage) {
+        if (errorMessage != null){
+            atAlamat.setError("Masukkan Alamat");
+        } else {
+            namaPemilik.setError(null);
+        }
+    }
+
+    private void ValidasiNama(String errorMessage) {
+        if (errorMessage != null){
+            namaPemilik.setError("Masukkan Nama");
+        } else {
+            namaPemilik.setError(null);
+        }
+    }
+
+    private void setErrorJenisTimbangan(String errorMessage) {
+        View view = jtSpinner.getSelectedView();
+
+        TextView tvListItem = (TextView) view;
+        TextView tvInvisible = findViewById(R.id.tvInvisibleError2);
+
+        if (errorMessage != null){
+            tvListItem.setError(errorMessage);
+            tvListItem.requestFocus();
+            tvInvisible.requestFocus();
+            tvInvisible.setError(errorMessage);
+        } else {
+            tvInvisible.setError(null);
+            tvListItem.setError(null);
+        }
+    }
 
 /*    private void Tahun() {
         String teksKosong = emptyText.getText().toString();
@@ -265,9 +328,6 @@ public class RekamData extends AppCompatActivity {
             teraUlangAwal.setText(simpleDateFormat.format(newDate.getTime()));
             emptyText.setText(simpleDateFormat2.format(newDate.getTime()));
             emptyBulan.setText(simpleDateFormat3.format(newDate.getTime()));
-            /*long timeStamp = newDate.getTimeInMillis();
-            String ts = Long.toString(timeStamp);
-            emptyTimeMillis.setText(ts);*/
 
             if(Timbangan.matches("Timbangan Meja|Timbangan Sentisimal|Timbangan Pegas|Timbangan Elektronik|" +
                     "Timbangan Dacin Logam|Timbangan Jembatan|Timbangan Bobot Ingsut|Neraca Emas - Obat|" +
@@ -324,7 +384,7 @@ public class RekamData extends AppCompatActivity {
 
         String namaInput = namaPemilik.getEditableText().toString();
         String noHpInput = noHp.getEditableText().toString();
-        String alamatInput = Objects.requireNonNull(atAlamat.getText().toString());
+        String alamatInput = atAlamat.getText().toString();
         String kecamatanInput = kecamatanSpinner.getSelectedItem().toString();
         String kelurahanInput = kelurahanSpinner.getSelectedItem().toString();
         String jenisTimbanganInput = jtSpinner.getSelectedItem().toString();
@@ -339,16 +399,7 @@ public class RekamData extends AppCompatActivity {
         long teksTimeMilis = Long.parseLong(time);
         String teksTimeFormat = emptyTimeFormat.getText().toString();
         String satuan = multiLineRadioGroup.getCheckedRadioButtonText().toString();
-        String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
-
-        if (namaInput.isEmpty() | alamatInput.isEmpty() | kecamatanInput.isEmpty() | kelurahanInput.isEmpty()
-                | jenisTimbanganInput.isEmpty() | biayaInput == 0 | jumlah.isEmpty()
-                | tanggalTeraAwal.isEmpty() | tanggalTeraAkhir.isEmpty()){
-            namaPemilik.setError("Masukkan Nama");
-            atAlamat.setError("Masukkan Alamat");
-            quantity.setError("Masukkan Quantity");
-            biaya.setError("Masukkan Biaya");
-        } else {
+        String jumlah = quantity.getEditableText().toString();
 
             /*Grafik Retribusi*/
 
@@ -560,7 +611,6 @@ public class RekamData extends AppCompatActivity {
                 });*/
 
         /*Add data Firebase*/
-    }
 
     @SuppressLint("SetTextI18n")
     private void setDefault() {

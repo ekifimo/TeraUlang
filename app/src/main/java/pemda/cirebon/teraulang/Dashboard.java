@@ -1,12 +1,12 @@
 package pemda.cirebon.teraulang;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import io.paperdb.Paper;
 import pemda.cirebon.teraulang.Prevelant.Prevelante;
@@ -29,7 +29,7 @@ public class Dashboard extends AppCompatActivity {
             monitoringBtn = findViewById(R.id.relativeLayout3);
             userName = findViewById(R.id.namapengguna);
 
-//            userName.setText(Prevelante.currentUserOnline.getNama());
+            userName.setText(Prevelante.currentUserOnline.getNama());
 
             teraBtn.setOnClickListener(v ->{
                 Intent intent = new Intent(Dashboard.this, ReportTera.class);

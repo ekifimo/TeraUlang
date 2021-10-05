@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/ANDROID/TeraUlang/app/src/main/res/layout/activity_dashboard.xml" value="0.2" />
         <entry key="..\:/ANDROID/TeraUlang/app/src/main/res/layout/activity_data_fragment.xml" value="0.2" />
         <entry key="..\:/ANDROID/TeraUlang/app/src/main/res/layout/activity_grafik_fragment.xml" value="0.2" />
         <entry key="..\:/ANDROID/TeraUlang/app/src/main/res/layout/activity_monitoring.xml" value="0.2" />
+        <entry key="..\:/ANDROID/TeraUlang/app/src/main/res/layout/activity_rekam_data.xml" value="0.2" />
         <entry key="..\:/ANDROID/TeraUlang/app/src/main/res/layout/activity_report_tera.xml" value="0.2" />
         <entry key="..\:/ANDROID/TeraUlang/app/src/main/res/layout/fragment_grafik__uttp.xml" value="0.2" />
         <entry key="..\:/ANDROID/TeraUlang/app/src/main/res/layout/item_table.xml" value="0.2" />

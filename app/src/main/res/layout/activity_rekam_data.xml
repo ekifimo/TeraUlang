@@ -181,6 +181,18 @@
             </Spinner>
 
             <TextView
+                android:id="@+id/tvInvisibleError"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="0dp"
+                android:paddingTop="0dp"
+                android:paddingRight="50dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:paddingEnd="50dp"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -219,15 +231,29 @@
 
                 <Spinner
                     android:id="@+id/SpinnerTimbangan"
-                    android:layout_marginTop="8dp"
                     android:layout_width="220dp"
                     android:layout_height="55dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
                     android:layout_below="@+id/textView8"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:background="@drawable/spinner_style"
-                    android:entries="@array/JenisTimbangan">
-                </Spinner>
+                    android:entries="@array/JenisTimbangan"/>
+
+                <TextView
+                    android:id="@+id/tvInvisibleError2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_alignRight="@+id/SpinnerTimbangan"
+                    android:layout_alignBottom="@+id/SpinnerTimbangan"
+                    android:layout_marginTop="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="50dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:layout_alignEnd="@+id/SpinnerTimbangan"
+                    android:paddingEnd="50dp"
+                    tools:ignore="RtlSymmetry" />
 
                 <TextView
                     android:id="@+id/QuantityTeks"
@@ -602,14 +628,14 @@
                         android:id="@+id/teraulangbrk"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="16dp"
                         android:layout_centerInParent="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
                         android:text="@string/dash"
                         android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="16dp" />
+                        android:textSize="16sp" />
                 </RelativeLayout>
             </RelativeLayout>
             <androidx.appcompat.widget.AppCompatButton

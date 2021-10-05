@@ -56,8 +56,6 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
     @Override
     public void onBindViewHolder(@NonNull @NotNull FirebaseAdapterRc.myViewHolder holder, int position) {
 
-        /*int sum = 0;*/
-
         TeraData teraData = teraList.get(position);
         holder.tvTgl.setText(teraData.getTanggalTeraUlangAwal());
         holder.tvNama.setText(teraData.getNama());
@@ -70,15 +68,11 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
         holder.tvAnakTimbangan.setText(teraData.getAnakTimbangan());
         holder.tvRetribusi.setText(String.valueOf(teraData.getBiaya()));
 
-
-        /*int total = teraData.getBiaya();
-        sum += total;
-        holder.tvTotal.setText(String.valueOf(sum));*/
-
         holder.btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(context, EditData.class);
             intent.putExtra("pid", teraData.getPId());
             intent.putExtra("tahun", teraData.getTanggalDropdown());
+            intent.putExtra("jenisUttp", teraData.getJenisTimbangan());
             context.startActivity(intent);
 
             DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teraData.getTanggalDropdown()).child(teraData.getBulan());
@@ -140,6 +134,65 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
 
                         }
                     });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            DatabaseReference dRef = FirebaseDatabase.getInstance().getReference().child("Monitoring");
+            Query query = dRef.orderByChild("Pid").equalTo(teraData.getPId());
+            query.addChildEventListener(new ChildEventListener() {
+
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    snapshot.getRef().setValue(null);
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            Query query1 = dRef.child(teraData.getTanggalMonitoring()).orderByChild("Pid").equalTo(teraData.getPId());
+            query1.addChildEventListener(new ChildEventListener() {
+
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    snapshot.getRef().setValue(null);
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
                 }
 
                 @Override
@@ -219,38 +272,6 @@ public class FirebaseAdapterRc extends RecyclerView.Adapter<FirebaseAdapterRc.my
 
                         }
                     });
-
-                    /*DatabaseReference dRef = FirebaseDatabase.getInstance().getReference().child("Monitoring");
-                    Query query = dRef.child(teraData.getTanggalMonitoring()).orderByChild("PId").equalTo(teraData.getPId());
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                            for (DataSnapshot deleteSnapsnot : snapshot.getChildren()){
-                                deleteSnapsnot.getRef().removeValue();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-                        }
-                    });*/
-                    /*Query query1 = dRef.orderByKey().equalTo(teraData.getPId());
-                    query1.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                            for (DataSnapshot deleteSnapshot : snapshot.getChildren()){
-                                String key = deleteSnapshot.getKey();
-                                snapshot.getRef().removeValue();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-                        }
-                    });
-*/
 
                     DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teraData.getTanggalDropdown()).child(teraData.getBulan());
                     dbase3.addListenerForSingleValueEvent(new ValueEventListener() {

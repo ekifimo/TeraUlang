@@ -51,12 +51,11 @@ public class Data_Fragment extends Fragment {
     DatabaseReference dReference;
     FirebaseAdapterRc adapter;
     ArrayList<TeraData> tera;
-    /*ArrayList<String> teraDataList;*/
     ArrayList<TeraData> teraDataList;
     Spinner thSpinner;
     String spinnerTahun;
     TextView exportBtn;
-    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download";
+    TextView totalTv;
     private static final int PERMISSION_REQUEST_CODE = 100;
 
     public static Data_Fragment newInstance() {
@@ -73,6 +72,7 @@ public class Data_Fragment extends Fragment {
     public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         exportBtn = view.findViewById(R.id.judul);
         teraDataList = new ArrayList<>();
+        totalTv = view.findViewById(R.id.totalText);
 
         String[] plhnThn = getResources().getStringArray(R.array.PilihTahun);
         List<String> dftrThn = Arrays.asList(plhnThn);
@@ -96,22 +96,6 @@ public class Data_Fragment extends Fragment {
         });
 
         exportBtn.setOnClickListener(v -> {
-
-            /*TestingCSV();*/
-
-            /*dReference = FirebaseDatabase.getInstance().getReference("InputTera");
-            dReference.child(spinnerTahun).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    TeraData teraData = snapshot.getValue(TeraData.class);
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });*/
             if (checkPermission()) {
                 fetchingData();
             } else {
@@ -157,9 +141,16 @@ public class Data_Fragment extends Fragment {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                int sum = 0;
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     TeraData teraData = dataSnapshot.getValue(TeraData.class);
                     tera.add(teraData);
+                    int value = teraData.getBiaya();
+
+                    sum = sum + value;
+
+                    totalTv.setText(String.valueOf(sum));
                     exportBtn.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
@@ -172,8 +163,6 @@ public class Data_Fragment extends Fragment {
         });
     }
 
-//    TESTING COBA DI COMMIT
-
     private void fetchingData() {
         dReference = FirebaseDatabase.getInstance().getReference("InputTera").child(spinnerTahun);
         dReference.addValueEventListener(new ValueEventListener() {
@@ -184,7 +173,12 @@ public class Data_Fragment extends Fragment {
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     TeraData teraData = snapshot.getValue(TeraData.class);
-                    data.append("\n").append(teraData.getTanggalTeraUlangAwal()).append(", ").append(teraData.getNama()).append(", ").append(teraData.getNoHp()).append(", ").append(teraData.getAlamat()).append(", ").append(teraData.getKecamatan()).append(", ").append(teraData.getKelurahan()).append(", ").append(teraData.getJenisTimbangan()).append(", ").append(teraData.getQuantity()).append(", ").append(String.valueOf(teraData.getBiaya()));
+                    data.append("\n").append(teraData.getTanggalTeraUlangAwal()).append(", ")
+                            .append(teraData.getNama()).append(", ").append(teraData.getNoHp())
+                            .append(", ").append(teraData.getAlamat()).append(", ")
+                            .append(teraData.getKecamatan()).append(", ").append(teraData.getKelurahan())
+                            .append(", ").append(teraData.getJenisTimbangan()).append(", ")
+                            .append(teraData.getQuantity()).append(", ").append(teraData.getBiaya());
                 }
                 Createcsv(data);
             }
@@ -196,29 +190,6 @@ public class Data_Fragment extends Fragment {
         });
 
     }
-
- /*   private void fetchingData() {
-        dReference = FirebaseDatabase.getInstance().getReference("InputTera").child(spinnerTahun);
-        dReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                StringBuilder data = new StringBuilder();
-                data.append("Tanggal Tera Ulang, Nama, No. Hp, Alamat, Kecamatan, Kelurahan, Jenis UTTP, Quantity, Retribusi");
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    TeraData teraData = snapshot.getValue(TeraData.class);
-                    data.append("\n").append(teraData.getTanggalTeraUlangAwal()).append(", ").append(teraData.getNama()).append(", ").append(teraData.getNoHp()).append(", ").append(teraData.getAlamat()).append(", ").append(teraData.getKecamatan()).append(", ").append(teraData.getKelurahan()).append(", ").append(teraData.getJenisTimbangan()).append(", ").append(teraData.getQuantity()).append(", ").append(String.valueOf(teraData.getBiaya()));
-                }
-                Createcsv(data);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }*/
 
     private void Createcsv(StringBuilder data) {
         Calendar calendar = Calendar.getInstance();

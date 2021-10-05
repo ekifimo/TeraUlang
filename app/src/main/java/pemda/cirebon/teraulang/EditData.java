@@ -1,10 +1,12 @@
 package pemda.cirebon.teraulang;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -49,6 +51,7 @@ public class EditData extends AppCompatActivity {
     String saveCurrentDate, saveCurrentTime;
     String dataID = "";
     String tahunID = "";
+    String jenisUTTP = "";
     TextView teraUlangAwal, teraUlangBrkt, emptyText, emptyBulan, emptyTimeMillis, emptyTimeFormat, emptyTimeMili;
     DatePickerDialog datePickerDialog;
     SimpleDateFormat simpleDateFormat, simpleDateFormat2, simpleDateFormat3, simpleDateFormat4;
@@ -61,6 +64,7 @@ public class EditData extends AppCompatActivity {
     ImageButton imageButton, backButton;
     Spinner jtSpinner, kecamatanSpinner, kelurahanSpinner;
     MultiLineRadioGroup multiLineRadioGroup;
+    String errorMessage = "Pilihan tidak boleh kosong";
 
     @SuppressLint({"WrongViewCast", "CutPasteId", "SimpleDateFormat"})
     @Override
@@ -74,6 +78,7 @@ public class EditData extends AppCompatActivity {
 
         dataID = getIntent().getStringExtra("pid");
         tahunID = getIntent().getStringExtra("tahun");
+        jenisUTTP = getIntent().getStringExtra("jenisUttp");
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         simpleDateFormat2 =  new SimpleDateFormat("yyyy");
         simpleDateFormat3 =  new SimpleDateFormat("MMM");
@@ -103,17 +108,14 @@ public class EditData extends AppCompatActivity {
         imageButton = findViewById(R.id.DateButton);
 
         imageButton.setOnClickListener(v -> {
-            v = this.getCurrentFocus();
-            if (v != null){
+            if (jtSpinner.getSelectedItem().toString().equals("Pilih Jenis UTTP")){
+                setErrorJenisTimbangan(errorMessage);
+            } else {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            }
-            if (jtSpinner.getSelectedItem().equals("Pilih Jenis Timbangan")) {
-                Toast.makeText(this, "Masukkan Jenis Timbangan", Toast.LENGTH_LONG).show();
-
-            }
-            else
                 showdatedialog();
+            }
+
         });
 
         int layoutItemId = android.R.layout.simple_dropdown_item_1line;
@@ -215,21 +217,188 @@ public class EditData extends AppCompatActivity {
 
         getData(dataID, tahunID);
 
-        backButton.setOnClickListener(v->{
-            Intent intent = new Intent(this, Dashboard.class);
-            startActivity(intent);
+        backButton.setOnClickListener(v-> cancelData(jenisUTTP));
+
+        submitBtn.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(namaPemilik.getText().toString())){
+                ValidasiNama(errorMessage);
+            } else if (TextUtils.isEmpty(atAlamat.getText().toString())){
+                ValidasiAlamat(errorMessage);
+            } else if (kecamatanSpinner.getSelectedItem().toString().equals("Pilih Kecamatan")){
+                ValidasiKecamatan(errorMessage);
+            } else if (TextUtils.isEmpty(quantity.getText().toString())){
+                ValidasiQuantity(errorMessage);
+            } else if (TextUtils.isEmpty(biaya.getText().toString())){
+                ValidasiBiaya(errorMessage);
+            } else if (jtSpinner.getSelectedItem().toString().equals("Pilih Jenis UTTP")){
+                setErrorJenisTimbangan(errorMessage);
+            }
+            else {
+                Input(dataID);
+            }
         });
 
-        submitBtn.setOnClickListener(v -> Input(dataID));
+    }
+
+    private void ValidasiBiaya(String errorMessage) {
+        if (errorMessage != null){
+            biaya.setError("Masukkan Jumlah Biaya");
+        } else {
+            biaya.setError(null);
+        }
+    }
+
+    private void ValidasiQuantity(String errorMessage) {
+        if (errorMessage != null){
+            quantity.setError("Masukkan Quantitas");
+        } else {
+            quantity.setError(null);
+        }
+    }
+
+    private void ValidasiKecamatan(String errorMessage) {
+        View view = kecamatanSpinner.getSelectedView();
+
+        TextView tvListItem = (TextView) view;
+
+        if (errorMessage != null){
+            tvListItem.setError("Masukkan Kecamatan");
+        } else {
+            tvListItem.setError(null);
+        }
+    }
+
+    private void ValidasiAlamat(String errorMessage) {
+        if (errorMessage != null){
+            atAlamat.setError("Masukkan Alamat");
+        } else {
+            namaPemilik.setError(null);
+        }
+    }
+
+    private void ValidasiNama(String errorMessage) {
+        if (errorMessage != null){
+            namaPemilik.setError("Masukkan Nama");
+        } else {
+            namaPemilik.setError(null);
+        }
+    }
+
+    private void setErrorJenisTimbangan(String errorMessage) {
+        View view = jtSpinner.getSelectedView();
+
+        TextView tvListItem = (TextView) view;
+        TextView tvInvisible = findViewById(R.id.tvInvisibleError2);
+
+        if (errorMessage != null){
+            tvListItem.setError(errorMessage);
+            tvListItem.requestFocus();
+            tvInvisible.requestFocus();
+            tvInvisible.setError(errorMessage);
+        } else {
+            tvInvisible.setError(null);
+            tvListItem.setError(null);
+        }
+    }
+
+    private void cancelData(String jenisUTTP) {
+        int biayaInput = Integer.parseInt(biaya.getEditableText().toString());
+        String teksKosong = emptyText.getText().toString();
+        String saveBulan = emptyBulan.getText().toString();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Batalkan Perubahan")
+                .setMessage("Yakin ingin membatalkan Perubahan ?")
+                .setPositiveButton("Ya", ((dialog, which) -> {
+                    DatabaseReference dbase6 = FirebaseDatabase.getInstance().getReference().child("Grafik")
+                            .child("GrafikUttp").child(teksKosong).child(jenisUTTP);
+
+                    dbase6.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            dbase6.runTransaction(new Transaction.Handler() {
+                                @NonNull
+                                @Override
+                                public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                    HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                                    if (tempdata == null) {
+                                        return Transaction.success(currentData);
+                                    }
+                                    long newCount = (Long) tempdata.get("Count") + 1;
+                                    tempdata.put("Count", newCount);
+                                    currentData.setValue(tempdata);
+                                    return Transaction.success(currentData);
+                                }
+
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    /*Grafik Retribusi*/
+
+                    DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teksKosong).child(saveBulan);
+                    dbase3.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                            dbase3.runTransaction(new Transaction.Handler() {
+                                @NonNull
+                                @NotNull
+                                @Override
+                                public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
+                                    HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                                    if (tempdata == null) {
+                                        return Transaction.success(currentData);
+                                    }
+                                    long newCount = (Long) tempdata.get("BiayaRetribusi") + biayaInput;
+                                    tempdata.put("BiayaRetribusi", newCount);
+                                    currentData.setValue(tempdata);
+                                    return Transaction.success(currentData);
+                                }
+
+                                @Override
+                                public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                        }
+                    });
+                    Intent intent = new Intent(this, Dashboard.class);
+                    startActivity(intent);
+                }))
+                .setNegativeButton("Tidak", (dialog, which) -> dialog.cancel())
+                .show();
 
     }
 
     private void getData(String dataID, String tahunID) {
+
+        String[] jnstmbngn = getResources().getStringArray(R.array.JenisTimbangan);
+        List<String> dftrtmbngn = Arrays.asList(jnstmbngn);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this, R.layout.custom_spinner, dftrtmbngn);
+        adapter2.setDropDownViewResource(R.layout.custom_dropdown);
+        jtSpinner = findViewById(R.id.SpinnerTimbangan);
+        jtSpinner.setAdapter(adapter2);
         DatabaseReference dataReference = FirebaseDatabase.getInstance().getReference().child("InputTera").child(tahunID);
 
         dataReference.child(dataID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
                 if (snapshot.exists()){
                     TeraData teraData = snapshot.getValue(TeraData.class);
 
@@ -246,6 +415,7 @@ public class EditData extends AppCompatActivity {
                     emptyBulan.setText(teraData.getBulan());
                     emptyTimeFormat.setText(teraData.getTanggalMonitoring());
                     emptyTimeMillis.setText(String.valueOf(teraData.getUnixTimestamp()));
+
                 }
             }
 
@@ -341,15 +511,6 @@ public class EditData extends AppCompatActivity {
         String teksTimeFormat = emptyTimeFormat.getText().toString();
         String satuan = multiLineRadioGroup.getCheckedRadioButtonText().toString();
         String jumlah = Objects.requireNonNull(quantity.getEditableText()).toString();
-
-        if (namaInput.isEmpty() | alamatInput.isEmpty() | kecamatanInput.isEmpty() | kelurahanInput.isEmpty()
-                | jenisTimbanganInput.isEmpty() | kapasitasInput.isEmpty() | biayaInput == 0 | jumlah.isEmpty()
-                | tanggalTeraAwal.isEmpty() | tanggalTeraAkhir.isEmpty()){
-            namaPemilik.setError("Masukkan Nama");
-            atAlamat.setError("Masukkan Alamat");
-            quantity.setError("Masukkan Quantity");
-            biaya.setError("Masukkan Biaya");
-        } else {
 
             DatabaseReference dbase6 = FirebaseDatabase.getInstance().getReference().child("Grafik")
                     .child("GrafikUttp").child(teksKosong).child(jenisTimbanganInput);
@@ -478,7 +639,7 @@ public class EditData extends AppCompatActivity {
                 public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                     if(!snapshot.child(dataID).exists()){
                         HashMap<String, Object> userInputMap = new HashMap<>();
-                        userInputMap.put("PId", dataID);
+                        userInputMap.put("PId", tanggalID);
                         userInputMap.put("Nama", namaInput);
                         userInputMap.put("NoHp", noHpInput);
                         userInputMap.put("Alamat", alamatInput);
@@ -514,8 +675,10 @@ public class EditData extends AppCompatActivity {
 
                 }
             });
+
+            Intent intent = new Intent(this, Dashboard.class);
+            startActivity(intent);
         }
-    }
 
     @SuppressLint("SetTextI18n")
     private void setDefault() {
@@ -536,7 +699,87 @@ public class EditData extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, Dashboard.class);
-        startActivity(intent);
+
+        String jenisTimbanganInput = jenisUTTP;
+        int biayaInput = Integer.parseInt(biaya.getEditableText().toString());
+        String teksKosong = emptyText.getText().toString();
+        String saveBulan = emptyBulan.getText().toString();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Batalkan Perubahan")
+                .setMessage("Yakin ingin membatalkan Perubahan ?")
+                .setPositiveButton("Ya", ((dialog, which) -> {
+                    DatabaseReference dbase6 = FirebaseDatabase.getInstance().getReference().child("Grafik")
+                            .child("GrafikUttp").child(teksKosong).child(jenisTimbanganInput);
+
+                    dbase6.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            dbase6.runTransaction(new Transaction.Handler() {
+                                @NonNull
+                                @Override
+                                public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                    HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                                    if (tempdata == null){
+                                        return Transaction.success(currentData);
+                                    }
+                                    long newCount = (Long) tempdata.get("Count") + 1;
+                                    tempdata.put("Count", newCount);
+                                    currentData.setValue(tempdata);
+                                    return Transaction.success(currentData);
+                                }
+
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    /*Grafik Retribusi*/
+
+                    DatabaseReference dbase3 = FirebaseDatabase.getInstance().getReference().child("Grafik").child(teksKosong).child(saveBulan);
+                    dbase3.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                            dbase3.runTransaction(new Transaction.Handler() {
+                                @NonNull
+                                @NotNull
+                                @Override
+                                public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
+                                    HashMap<String, Object> tempdata = (HashMap<String, Object>) currentData.getValue();
+                                    if (tempdata == null){
+                                        return Transaction.success(currentData);
+                                    }
+                                    long newCount = (Long) tempdata.get("BiayaRetribusi") + biayaInput;
+                                    tempdata.put("BiayaRetribusi", newCount);
+                                    currentData.setValue(tempdata);
+                                    return Transaction.success(currentData);
+                                }
+
+                                @Override
+                                public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                        }
+                    });
+                    Intent intent = new Intent(this, Dashboard.class);
+                    startActivity(intent);
+                }))
+                .setNegativeButton("Tidak", (dialog, which) -> dialog.cancel())
+                .show();
     }
 }
